@@ -5,6 +5,7 @@
 	"main": "server/index.js",
 	"type": "module",
 	"scripts": {
+		"clean": "rm -rf ./dist/*",
 		"start": "node --no-warnings server/dev.js",
 		"dev": "node --no-warnings server/dev.js",
 		"lint": "eslint '**/*.{js,jsx,ts,tsx}'",

@@ -1,8 +1,11 @@
+// @ts-nocheck
 // @ts-expect-error Module '"react"' has no exported member 'use'.
 import { StrictMode, useEffect, useState, use, startTransition } from 'react';
 import { createRoot } from 'react-dom/client';
 import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpack/client';
-import ServerOutput from './ServerOutput.jsx';
+import ComponentA from './ComponentA.jsx';
+import ComponentB from './ComponentB.jsx';
+import Shell from './Shell.jsx';
 
 /** Dev-only dependencies */
 import { DevPanel } from './utils/dev/DevPanel.jsx';
@@ -31,15 +34,6 @@ window.router = {
 	}
 };
 
-const Wrapper = ({ children }) => {
-
-	return (
-		<div>
-			<span>this is a wrapper </span>
-			{children}
-		</div>
-	)
-}
 
 function Router() {
 	const [url, setUrl] = useState('/rsc' + window.location.search);
@@ -58,11 +52,10 @@ function Router() {
 		};
 	}, []);
 
-	return (
-		<Wrapper>
-			<ServerOutput url={url} />
-			{/* <DevPanel url={url} /> */}
-		</Wrapper>
+	return (<>
+			<Shell><ComponentA input={"some input"} /></Shell>
+			<Shell><ComponentB/></Shell>
+	</>
 	);
 }
 

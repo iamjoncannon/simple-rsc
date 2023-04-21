@@ -5,7 +5,6 @@ import SearchableAlbumList from './SearchableAlbumList';
 
 // search is search params from client
 
-/** @param {{ search: string }} props */
 export default async function ServerRoot({ search }) {
 	return (
 		<>
@@ -17,7 +16,6 @@ export default async function ServerRoot({ search }) {
 	);
 }
 
-/** @param {{ search: string }} props */
 async function Albums({ search }) {
 	const albums = await getAll();
 	return <SearchableAlbumList search={search} albums={albums} />;

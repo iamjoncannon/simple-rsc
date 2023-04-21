@@ -34,12 +34,18 @@ export async function build() {
 	const sharedConfig = {
 		bundle: true,
 		format: 'esm',
-		logLevel: 'error'
+		logLevel: 'error',
+		minify: true
 	};
+
+	const entryPoints = ['ComponentA', 'ComponentB', 'rscUtils'].map((each) =>
+		fileURLToPath(resolveSrc(`${each}.jsx`))
+	);
 
 	await esbuild({
 		...sharedConfig,
-		entryPoints: [fileURLToPath(resolveSrc('page.jsx'))],
+		entryPoints,
+		// entryPoints: [fileURLToPath(resolveSrc('page.jsx'))],
 		outdir: fileURLToPath(serverDist),
 		packages: 'external',
 		plugins: [

@@ -1,7 +1,6 @@
 'use client';
 import { useTransition } from 'react';
 
-/** @param {{ search: string }} props */
 export default function SearchBox({ search: initialSearch }) {
 	const [isPending, startTransition] = useTransition();
 
