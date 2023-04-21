@@ -2,6 +2,9 @@ import { Suspense } from 'react';
 import { getAll } from './db/get.js';
 import SearchableAlbumList from './SearchableAlbumList';
 
+
+// search is search params from client
+
 /** @param {{ search: string }} props */
 export default async function ServerRoot({ search }) {
 	return (

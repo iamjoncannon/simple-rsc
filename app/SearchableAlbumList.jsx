@@ -1,11 +1,11 @@
-import SearchBox from './SearchBox';
+import SearchBox2 from './SearchBox2';
 
 /** @param {{ albums: import('./db/get').Album[], search: string }} props */
 export default function SearchableAlbumList({ albums, search }) {
 	const filteredAlbums = filterAlbums(albums, search ?? '');
 	return (
 		<>
-			<SearchBox search={search} />
+			<SearchBox2 search={search} />
 			<ul>
 				{filteredAlbums.map((album) => (
 					<div key={album.id}>

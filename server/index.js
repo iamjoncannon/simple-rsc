@@ -6,6 +6,8 @@ import { readClientComponentMap, resolveClientDist, resolveServerDist } from './
 
 const server = createRouter();
 
+// re-render page component from searchParams
+
 server.get('/rsc', async ({ request }) => {
 	const { searchParams } = new URL(request.url);
 	const PageModule = await import(
