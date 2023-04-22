@@ -1,6 +1,4 @@
-'use client';
 
 export default function ComponentC(){
-
-    return <div>This is ComponentC</div>
+    return <div>This is Component  C</div>
 }

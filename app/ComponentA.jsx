@@ -1,5 +1,5 @@
 import ComponentC from "./ComponentC";
-import useServerTag from "./rscUtils";
+import useServerTag from "./useServerTag";
 
 
 async function ComponentA({ input }){

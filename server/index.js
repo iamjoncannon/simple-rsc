@@ -1,29 +1,31 @@
 import fs from 'node:fs';
-import { createElement } from 'react';
 import { createRouter } from '@hattip/router';
-import * as ReactServerDom from 'react-server-dom-webpack/server.browser';
-import { resolveClientDist, resolveServerDist } from './utils.js';
+import { createServer } from '@hattip/adapter-node';
+import RscService from './RscService.js';
+
+export const clientRootDirectory = '../app/';
+export const distRootDirectory = '../dist/';
+export const appRoot = '_router.jsx';
+export const serverComponents = ['ComponentA', 'ComponentB'];
+
+const port = 3000;
+
+process.env.NODE_ENV = 'development';
+
+const rscService = new RscService(
+	clientRootDirectory,
+	distRootDirectory,
+	appRoot,
+	serverComponents
+);
+
+rscService.buildWatch();
 
 const server = createRouter();
 
 server.post('/rsc', async ({ request }) => {
 	const props = await request.json();
-
-	// stream(props)
-
-	const PageModule = await import(
-		resolveServerDist(
-			`${props.tag}.js${process.env.NODE_ENV === 'development' ? `?invalidate=${Date.now()}` : ''}`
-		).href
-	);
-
-	const Page = createElement(PageModule.default, props);
-
-	const stream = ReactServerDom.renderToReadableStream(Page, global.clientComponentMap);
-
-	return new Response(stream, {
-		headers: { 'Content-type': 'text/x-component' }
-	});
+	return rscService.stream(props);
 });
 
 server.get('/', async () => {
@@ -38,13 +40,10 @@ server.get('/', async () => {
 
 server.get('/dist/client/**/*.js', async ({ request }) => {
 	const { pathname } = new URL(request.url);
-	const filePath = pathname.replace('/dist/client/', '');
-	const contents = await fs.promises.readFile(resolveClientDist(filePath), 'utf-8');
-	return new Response(contents, {
-		headers: {
-			'Content-Type': 'application/javascript'
-		}
-	});
+	return rscService.serveClientComponent(pathname);
 });
 
-export const handler = server.buildHandler();
+createServer(server.buildHandler()).listen(port, 'localhost', async () => {
+	await rscService.build();
+	console.log(`⚛️ Future of React started on http://localhost:${port}`);
+});

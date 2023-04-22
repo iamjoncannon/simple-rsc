@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { build as esbuild } from 'esbuild';
 import fs from 'node:fs';
 import { WebSocketServer } from 'ws';
@@ -28,12 +29,12 @@ export default class RscService {
 		return new URL(path, new URL(this.distPath, import.meta.url));
 	}
 
-	resolveServerDist(path, resolveDist) {
-		return new URL(path, resolveDist('server/'));
+	resolveServerDist(path) {
+		return new URL(path, this.resolveDist('server/'));
 	}
 
-	resolveClientDist(path, resolveDist) {
-		return new URL(path, resolveDist('client/'));
+	resolveClientDist(path) {
+		return new URL(path, this.resolveDist('client/'));
 	}
 
 	async build() {
@@ -58,9 +59,37 @@ export default class RscService {
 			fileURLToPath(this.resolveSrc(`${each}.jsx`))
 		);
 
-		const _resolveSrc = this.resolveSrc;
-		const _resolveDist = this.resolveDist;
-		const _resolveClientDist = this.resolveClientDist;
+		async function onResolveCb({ path }) {
+			for (const jsxExt of JSX_EXTS) {
+				const absoluteSrc = new URL(this.resolveSrc(path) + jsxExt);
+
+				if (fs.existsSync(absoluteSrc)) {
+					const contents = await fs.promises.readFile(absoluteSrc, 'utf-8');
+					if (!USE_CLIENT_ANNOTATIONS.some((annotation) => contents.startsWith(annotation))) return;
+
+					clientEntryPoints.add(fileURLToPath(absoluteSrc));
+					const absoluteDist = new URL(this.resolveClientDist(path) + '.js');
+
+					const id = `/dist/client/${path}.js`;
+
+					clientComponentMap[id] = {
+						id,
+						chunks: [],
+						name: 'default', // TODO support named exports
+						async: true
+					};
+
+					return {
+						path: `data:text/javascript,${encodeURIComponent(
+							getClientComponentModule(id, absoluteDist.href)
+						)}`,
+						external: true
+					};
+				}
+			}
+		}
+
+		const boundOnResolveCb = onResolveCb.bind(this);
 
 		await esbuild({
 			...sharedConfig,
@@ -71,36 +100,7 @@ export default class RscService {
 				{
 					name: 'resolve-client-imports',
 					setup(build) {
-						build.onResolve({ filter: relativeOrAbsolutePathRegex }, async ({ path }) => {
-							for (const jsxExt of JSX_EXTS) {
-								const absoluteSrc = new URL(_resolveSrc(path) + jsxExt);
-
-								if (fs.existsSync(absoluteSrc)) {
-									const contents = await fs.promises.readFile(absoluteSrc, 'utf-8');
-									if (!USE_CLIENT_ANNOTATIONS.some((annotation) => contents.startsWith(annotation)))
-										return;
-
-									clientEntryPoints.add(fileURLToPath(absoluteSrc));
-									const absoluteDist = new URL(_resolveClientDist(path, _resolveDist) + '.js');
-
-									const id = `/dist/client/${path}.js`;
-
-									clientComponentMap[id] = {
-										id,
-										chunks: [],
-										name: 'default', // TODO support named exports
-										async: true
-									};
-
-									return {
-										path: `data:text/javascript,${encodeURIComponent(
-											getClientComponentModule(id, absoluteDist.href)
-										)}`,
-										external: true
-									};
-								}
-							}
-						});
+						build.onResolve({ filter: relativeOrAbsolutePathRegex }, boundOnResolveCb);
 					}
 				}
 			]
@@ -163,8 +163,7 @@ export default class RscService {
 			this.resolveServerDist(
 				`${props.tag}.js${
 					process.env.NODE_ENV === 'development' ? `?invalidate=${Date.now()}` : ''
-				}`,
-				this.resolveDist
+				}`
 			).href
 		);
 
@@ -174,6 +173,16 @@ export default class RscService {
 
 		return new Response(stream, {
 			headers: { 'Content-type': 'text/x-component' }
+		});
+	}
+
+	async serveClientComponent(pathname) {
+		const filePath = pathname.replace('/dist/client/', '');
+		const contents = await fs.promises.readFile(this.resolveClientDist(filePath), 'utf-8');
+		return new Response(contents, {
+			headers: {
+				'Content-Type': 'application/javascript'
+			}
 		});
 	}
 }

@@ -1,4 +1,4 @@
-import useServerTag from "./rscUtils"
+import useServerTag from "./useServerTag"
 
 
 async function ComponentB(){
