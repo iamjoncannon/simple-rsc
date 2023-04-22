@@ -5,14 +5,18 @@ import { relative } from 'node:path';
 import chokidar from 'chokidar';
 import { handler } from './index.js';
 import { build } from './build.js';
-import { src } from './utils.js';
+
+export const clientRootDirectory = '../app/';
+export const distRootDirectory = '../dist/';
+export const appRoot = '_router.jsx';
+export const serverComponents = ['ComponentA', 'ComponentB'];
 
 const port = 3000;
 
 process.env.NODE_ENV = 'development';
 
 createServer(handler).listen(port, 'localhost', async () => {
-	await build();
+	await build(clientRootDirectory, distRootDirectory, appRoot, serverComponents);
 	console.log(`⚛️ Future of React started on http://localhost:${port}`);
 });
 
@@ -38,17 +42,16 @@ wsServer.on('connection', (ws) => {
 	ws.send('connected');
 });
 
-/**
- * Watch files in the `app/` directory
- * and trigger a build + refresh on change.
- */
 (async function buildWatch() {
-	chokidar.watch(fileURLToPath(src), { ignoreInitial: true }).on('all', async (event, path) => {
-		console.log('[change]', relative(fileURLToPath(src), path));
-		await build();
+	const clientRootPath = new URL(clientRootDirectory, import.meta.url);
+	chokidar
+		.watch(fileURLToPath(clientRootPath), { ignoreInitial: true })
+		.on('all', async (event, path) => {
+			console.log('[change]', relative(fileURLToPath(clientRootPath), path));
+			await build();
 
-		for (const socket of sockets) {
-			socket.send('refresh');
-		}
-	});
+			for (const socket of sockets) {
+				socket.send('refresh');
+			}
+		});
 })();
