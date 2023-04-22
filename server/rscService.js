@@ -56,7 +56,7 @@ export default class RscService {
 		};
 
 		const entryPoints = this.serverComponents.map((each) =>
-			fileURLToPath(this.resolveSrc(`${each}.jsx`))
+			fileURLToPath(this.resolveSrc(`${each}`))
 		);
 
 		async function onResolveCb({ path }) {

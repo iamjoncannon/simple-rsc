@@ -1,9 +1,8 @@
 import React from 'react'
-import ComponentC from "./ComponentC";
-
+import ComponentC from "./C/ComponentC";
 
 async function ComponentA({ input }){
-    return <div>This is ComponentA {input}<ComponentC/></div>
+    return <div>This is Component A {input}<ComponentC/></div>
 }
 
 ComponentA.tag = "ComponentA"

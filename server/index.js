@@ -6,7 +6,26 @@ import RscService from './RscService.js';
 export const clientRootDirectory = '../app/';
 export const distRootDirectory = '../dist/';
 export const appRoot = 'appRoot.jsx';
-export const serverComponents = ['serverComponents/ComponentA', 'serverComponents/ComponentB'];
+const serverComponentPath = process.cwd() + '/app/serverComponents';
+
+function walk(dir) {
+	let results = [];
+	const list = fs.readdirSync(dir);
+	list.forEach(function (file) {
+		file = dir + '/' + file;
+		const stat = fs.statSync(file);
+		if (stat && stat.isDirectory()) {
+			results = results.concat(walk(file));
+		} else {
+			results.push(file);
+		}
+	});
+	return results;
+}
+
+const serverComponents = walk(serverComponentPath).map((each) =>
+	each.replace(serverComponentPath, 'serverComponents')
+);
 
 const port = 3000;
 

@@ -6,9 +6,6 @@ import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpa
 import ComponentA from './serverComponents/ComponentA.jsx';
 import ComponentB from './serverComponents/ComponentB.jsx';
 import Shell from './Shell.jsx';
-
-/** Dev-only dependencies */
-import { DevPanel } from './utils/dev/DevPanel.jsx';
 import './utils/dev/live-reload.js';
 
 // HACK: map webpack resolution to native ESM
@@ -21,37 +18,11 @@ window.__webpack_require__ = async (id) => {
 const root = createRoot(document.getElementById('root'));
 root.render(
 	<StrictMode>
-		<Router />
+		<AppRoot />
 	</StrictMode>
 );
 
-let callbacks = [];
-// @ts-expect-error Property 'router' does not exist on type 'Window & typeof globalThis'.
-window.router = {
-	navigate(/** @type {string} */ url) {
-		window.history.replaceState({}, '', url);
-		callbacks.forEach((cb) => cb());
-	}
-};
-
-
-function Router() {
-	const [url, setUrl] = useState('/rsc' + window.location.search);
-
-	useEffect(() => {
-		function handleNavigate() {
-			startTransition(() => {
-				setUrl('/rsc' + window.location.search);
-			});
-		}
-		callbacks.push(handleNavigate);
-		window.addEventListener('popstate', handleNavigate);
-		return () => {
-			callbacks.splice(callbacks.indexOf(handleNavigate), 1);
-			window.removeEventListener('popstate', handleNavigate);
-		};
-	}, []);
-
+function AppRoot() {
 	return (<>
 			<Shell><ComponentA input={"some input"} /></Shell>
 			<Shell><ComponentB/></Shell>
