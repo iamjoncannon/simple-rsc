@@ -5,8 +5,8 @@ import RscService from './RscService.js';
 
 export const clientRootDirectory = '../app/';
 export const distRootDirectory = '../dist/';
-export const appRoot = '_router.jsx';
-export const serverComponents = ['ComponentA', 'ComponentB'];
+export const appRoot = 'appRoot.jsx';
+export const serverComponents = ['serverComponents/ComponentA', 'serverComponents/ComponentB'];
 
 const port = 3000;
 

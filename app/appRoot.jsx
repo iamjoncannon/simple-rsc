@@ -3,8 +3,8 @@
 import { StrictMode, useEffect, useState, use, startTransition } from 'react';
 import { createRoot } from 'react-dom/client';
 import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpack/client';
-import ComponentA from './ComponentA.jsx';
-import ComponentB from './ComponentB.jsx';
+import ComponentA from './serverComponents/ComponentA.jsx';
+import ComponentB from './serverComponents/ComponentB.jsx';
 import Shell from './Shell.jsx';
 
 /** Dev-only dependencies */

@@ -2,7 +2,6 @@
 import { useState, use } from 'react';
 import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpack/client';
 
-
 const initialCache = new Map();
 
 function Shell(props) {
