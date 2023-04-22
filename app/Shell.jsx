@@ -6,10 +6,10 @@ const initialCache = new Map();
 
 function Shell(props) {
 
-	const tag = props.children.type.tag
+	const hydrator = props.children.type.hydrator
 	const childProps = props.children.props
 
-	const propsForServer = JSON.stringify({ tag, ...childProps })
+	const propsForServer = JSON.stringify({ hydrator, ...childProps })
 
 	const init = {
 		method: "POST",

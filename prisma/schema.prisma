@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Artist {
+  id             String @id @default(uuid())
+  geniusId       Int
+  name           String
+  imageUrl       String
+  headerImageUrl String
+  url            String
+  description    String
+}
+
+model Song {
+  id                           String  @id @default(uuid())
+  geniusId                     Int
+  artist_names                 String?
+  description                  String?
+  full_title                   String?
+  title                        String?
+  url                          String?
+  albumName                    String?
+  featured_artists             String?
+  primary_artists              String?
+  writer_artists               String?
+  header_image_thumbnail_url   String?
+  header_image_url             String?
+  release_date                 String?
+  song_art_image_thumbnail_url String?
+  song_art_image_url           String?
+  searchIndex                  String?
+}

@@ -1,7 +1,11 @@
 import fs from 'node:fs';
+// @ts-ignore
 import { createRouter } from '@hattip/router';
+// @ts-ignore
 import { createServer } from '@hattip/adapter-node';
 import RscService from './RscService.js';
+import { PrismaClient } from '@prisma/client';
+import hydrators from './hydrators.js';
 
 export const clientRootDirectory = '../app/';
 export const distRootDirectory = '../dist/';
@@ -35,12 +39,32 @@ const rscService = new RscService(
 	clientRootDirectory,
 	distRootDirectory,
 	appRoot,
-	serverComponents
+	serverComponents,
+	hydrators
 );
 
 rscService.buildWatch();
 
 const server = createRouter();
+
+const prisma = new PrismaClient();
+
+server.get('/songs', async ({ request }) => {
+	const search = new URL(request.url).searchParams.get('search');
+
+	if (!!search && search !== '') {
+		const result = await prisma.song.findMany({
+			where: {
+				searchIndex: {
+					contains: String(search)
+				}
+			}
+		});
+		return new Response(JSON.stringify(result));
+	}
+
+	return new Response(JSON.stringify([]));
+});
 
 server.post('/rsc', async ({ request }) => {
 	const props = await request.json();
@@ -64,5 +88,5 @@ server.get('/dist/client/**/*.js', async ({ request }) => {
 
 createServer(server.buildHandler()).listen(port, 'localhost', async () => {
 	await rscService.build();
-	console.log(`⚛️ Future of React started on http://localhost:${port}`);
+	console.log(`rsc service started on http://localhost:${port}`);
 });

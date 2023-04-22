@@ -7,18 +7,21 @@ import { relative } from 'node:path';
 import chokidar from 'chokidar';
 import { createElement } from 'react';
 import * as ReactServerDom from 'react-server-dom-webpack/server.browser';
+import hydratorMap from '../hydratorMap.js';
+import hydrators from './hydrators.js';
 
 const USE_CLIENT_ANNOTATIONS = ['"use client"', "'use client'"];
 const JSX_EXTS = ['.jsx', '.tsx'];
 const relativeOrAbsolutePathRegex = /^\.{0,2}\//;
 
 export default class RscService {
-	constructor(srcPath, distPath, appRoot, serverComponents) {
+	constructor(srcPath, distPath, appRoot, serverComponents, hydrators) {
 		this.srcPath = srcPath;
 		this.distPath = distPath;
 		this.appRoot = appRoot;
 		this.serverComponents = serverComponents;
 		this.clientComponentMap = {};
+		this.hydrators = hydrators;
 	}
 
 	resolveSrc(path) {
@@ -158,18 +161,30 @@ export default class RscService {
 			});
 	}
 
-	async stream(props) {
+	async stream(propsFromShell) {
+		// resolve hydrator for component
+
+		if (!propsFromShell.hydrator || !hydratorMap[propsFromShell.hydrator]) {
+			return new Response('server error- failed to hydrate server component', {
+				headers: { 'Content-type': 'text/x-component' }
+			});
+		}
+
+		const hydrator = hydratorMap[propsFromShell.hydrator];
+
+		// process props- take view layer props and resolve data for hydration
+
+		const hydratorProps = await hydrators[hydrator](propsFromShell);
+
 		const PageModule = await import(
 			this.resolveServerDist(
-				`${props.tag}.js${
-					process.env.NODE_ENV === 'development' ? `?invalidate=${Date.now()}` : ''
-				}`
+				`${hydrator}.js${process.env.NODE_ENV === 'development' ? `?invalidate=${Date.now()}` : ''}`
 			).href
 		);
 
-		const Page = createElement(PageModule.default, props);
+		const jsx = createElement(PageModule.default, hydratorProps);
 
-		const stream = ReactServerDom.renderToReadableStream(Page, global.clientComponentMap);
+		const stream = ReactServerDom.renderToReadableStream(jsx, global.clientComponentMap);
 
 		return new Response(stream, {
 			headers: { 'Content-type': 'text/x-component' }

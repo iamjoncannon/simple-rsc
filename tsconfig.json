@@ -11,5 +11,5 @@
 		"allowSyntheticDefaultImports": true,
 		"resolveJsonModule": true
 	},
-	"include": ["app/**/*", "server/**/*"]
+	"include": ["app/**/*", "server/**/*", "db/populate.cjs"]
 }
