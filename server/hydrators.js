@@ -22,13 +22,16 @@ const SongsView = async ({ search }) => {
 	};
 };
 
-const ArtistView = async ({ search }) => {
+const ArtistView = async ({ search, source }) => {
 	let artistData = [];
 	if (search?.length > MIN_SEARCH_LENGTH) {
 		artistData = await prisma.artist.findMany({
 			where: {
 				name: {
 					contains: String(search)
+				},
+				source: {
+					equals: String(source)
 				}
 			}
 		});
@@ -36,6 +39,7 @@ const ArtistView = async ({ search }) => {
 
 	return {
 		search,
+		source,
 		artistData
 	};
 };

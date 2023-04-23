@@ -16,12 +16,12 @@ const ArtistCard = ({ artist }) => {
 	);
 };
 
-async function ArtistView({ search, artistData }) {
-	return search?.length > MIN_SEARCH_LENGTH ? (
+async function ArtistView({ search, artistData, source }) {
+	return search?.length > MIN_SEARCH_LENGTH && artistData?.length > 0 ? (
 		<div className="genius-card-container">
 			<>
 				<h3>
-					<i>{`Genius Artist Results for "${search}": ${artistData?.length}`}</i>
+					<i>{`${source} Artist Results for "${search}": ${artistData?.length}`}</i>
 				</h3>
 
 				<div className="genius-card-container-2">

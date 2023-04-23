@@ -22,10 +22,10 @@ const MainLayout = () => {
 			</header>
 			<main>
 				<Shell>
-					<ArtistView {...{ search }} />
+					<ArtistView {...{ search, source: 'genius' }} />
 				</Shell>
 				<Shell>
-					<ArtistView {...{ search }} />
+					<ArtistView {...{ search, source: 'discogs' }} />
 				</Shell>
 				<Shell>
 					<SongsView {...{ search }} />

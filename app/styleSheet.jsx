@@ -5,6 +5,9 @@ import styled from 'styled-components';
     duplicating in server rendered code
 */
 
+const breakPointLarge = '1300px';
+const breakPointMedium = '1000px';
+
 export const StyledContainer = styled.div`
 	min-height: 100vh;
 	background-color: #202124;
@@ -48,7 +51,7 @@ export const StyledContainer = styled.div`
 		align-items: center;
 		justify-content: space-evenly;
 
-		@media (max-width: 1000px) {
+		@media (max-width: ${breakPointLarge}) {
 			flex-direction: column;
 		}
 	}
@@ -61,8 +64,10 @@ export const StyledContainer = styled.div`
 		padding: 1rem;
 		border-radius: 2rem;
 
-		@media (max-width: 1000px) {
-			max-width: 90%;
+		text-transform: capitalize;
+
+		@media (max-width: ${breakPointMedium}) {
+			max-width: 30rem;
 		}
 	}
 
@@ -79,6 +84,7 @@ export const StyledContainer = styled.div`
 		display: flex;
 		justify-content: space-around;
 		border-radius: 2rem;
+		overflow-x: hidden;
 
 		> div {
 			width: 17rem;
@@ -90,6 +96,10 @@ export const StyledContainer = styled.div`
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		justify-content: center;
+		max-width: 20rem;
+		margin-left: auto;
+		margin-right: auto;
 
 		img {
 			height: 7.5rem;
@@ -115,7 +125,7 @@ export const StyledContainer = styled.div`
 
 		.title {
 			font-weight: 800;
-			font-size: 3rem;
+			font-size: 2rem;
 			margin: auto;
 		}
 
