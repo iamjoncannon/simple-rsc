@@ -2,9 +2,11 @@
 import { useState, use, Suspense, useMemo } from 'react';
 import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpack/client';
 
-const initialCache = new Map();
+const initialCacheJsx = new Map();
+const initialCacheRemoteState = new Map();
 
 function ServerComponentShell(props) {
+	const { onHydrate } = props;
 	const componentName = props.children.type.componentName;
 	const childProps = props.children.props;
 	// define hydrator as prop or fallback
@@ -22,17 +24,37 @@ function ServerComponentShell(props) {
 	};
 
 	const url = '/rsc';
-	const [cache] = useState(initialCache);
+	const [jsxCache] = useState(initialCacheJsx);
+	const [stateCache] = useState(initialCacheRemoteState);
 
 	const lazyJsx = useMemo(() => {
-		if (!cache.has(propsForServer)) {
-			cache.set(propsForServer, createFromFetch(fetch(url, init)));
+		if (!jsxCache.has(propsForServer)) {
+			const apiCall = fetch(url, init);
+
+			apiCall.then((data) => {
+				let stateFromHydration = '';
+				try {
+					stateFromHydration = JSON.parse(
+						decodeURIComponent(data.headers.get('stateFromHydration') || '')
+					);
+				} catch (err) {}
+				stateCache.set(propsForServer, stateFromHydration);
+			});
+
+			const created = createFromFetch(apiCall);
+
+			jsxCache.set(propsForServer, created);
 		}
 
-		return cache.get(propsForServer);
+		const jsxCacheHit = jsxCache.get(propsForServer);
+		const stateCacheHit = stateCache.get(propsForServer);
+
+		!!onHydrate && onHydrate(stateCacheHit);
+
+		return use(jsxCacheHit);
 	}, [propsForServer]);
 
-	return <>{!lazyJsx.isPending ? use(lazyJsx) : <span>loading</span>}</>;
+	return lazyJsx;
 }
 
 export default ServerComponentShell;

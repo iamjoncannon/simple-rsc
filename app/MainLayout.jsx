@@ -54,7 +54,11 @@ const MainLayout = () => {
 				{search?.length > MIN_SEARCH_LENGTH && (
 					<>
 						<div className="grid-section-artist">
-							<ServerComponentShell>
+							<ServerComponentShell
+								onHydrate={(stateFromHydration) =>
+									console.log('ArtistFeatureCard stateFromHydration ', stateFromHydration)
+								}
+							>
 								<ArtistFeatureCard
 									hydrator={hydratorConstants.ArtistFeatureCardOneResult}
 									{...{ search }}

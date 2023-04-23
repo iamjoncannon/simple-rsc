@@ -14,8 +14,8 @@ const outfile = '/1000-genius-songs';
 let entities = [];
 const size = 30000;
 const fileSize = 50;
-const start = 20001;
-const waitInSeconds = 0.25; // try not to get throttled
+const start = 20701;
+const waitInSeconds = 0.5; // try not to get throttled
 
 const geniusCall = (i) => {
 	fetch(`https://api.genius.com/${entity}/${i}?access_token=${accessToken}&text_format=html`, {

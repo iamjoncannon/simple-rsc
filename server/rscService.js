@@ -175,7 +175,7 @@ export default class RscService {
 
 		// process props- take view layer props and resolve data for hydration
 
-		const hydratorProps = await hydrators[hydrator](propsFromShell);
+		const { hydratorProps, stateFromHydration } = await hydrators[hydrator](propsFromShell);
 
 		const PageModule = await import(
 			this.resolveServerDist(
@@ -190,7 +190,9 @@ export default class RscService {
 		const stream = ReactServerDom.renderToReadableStream(jsx, global.clientComponentMap);
 
 		return new Response(stream, {
-			headers: { 'Content-type': 'text/x-component' }
+			headers: new Headers({
+				stateFromHydration: encodeURIComponent(JSON.stringify(stateFromHydration))
+			})
 		});
 	}
 

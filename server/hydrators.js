@@ -6,17 +6,35 @@ const ArtistFeatureCardOneResult = async ({ search }) => {
 	let artistData = [];
 	if (search?.length > MIN_SEARCH_LENGTH) {
 		// @ts-ignore
-		artistData = await prisma.artist.findMany({
+		const exactMatch = await prisma.artist.findMany({
 			where: {
 				name: {
-					contains: String(search)
+					equals: String(search)
 				}
 			}
 		});
+
+		artistData = exactMatch;
+
+		if (exactMatch.length === 0) {
+			// @ts-ignore
+			artistData = await prisma.artist.findMany({
+				where: {
+					name: {
+						contains: String(search)
+					}
+				}
+			});
+
+			artistData.sort((a, b) => b.description.length - a.description.length);
+		}
 	}
 
 	return {
-		artist: artistData[0]
+		hydratorProps: {
+			artist: artistData[0]
+		},
+		stateFromHydration: { length: artistData.length }
 	};
 };
 
@@ -36,8 +54,10 @@ const ArtistFeatureCardForSplashPage = async () => {
 		await prisma.$queryRaw`SELECT * FROM Artist WHERE LENGTH(description) > 500 LIMIT 1000 OFFSET ${id}`;
 
 	return {
-		// @ts-ignore
-		artist: result[0] || (await getFallback())
+		hydratorProps: {
+			// @ts-ignore
+			artist: result[0] || (await getFallback())
+		}
 	};
 };
 
@@ -54,8 +74,10 @@ const SongsListView = async ({ search }) => {
 	}
 
 	return {
-		search,
-		songData
+		hydratorProps: {
+			search,
+			songData
+		}
 	};
 };
 
@@ -75,9 +97,11 @@ const ArtistListView = async ({ search, source }) => {
 	}
 
 	return {
-		search,
-		source,
-		artistData
+		hydratorProps: {
+			search,
+			source,
+			artistData
+		}
 	};
 };
 
