@@ -6,6 +6,7 @@ const songs2 = require('./1000songs-1500.json');
 const songs3 = require('./1000songs-2000.json');
 const songs4 = require('./1000songs-2500.json');
 const songs5 = require('./1000songs-3000.json');
+const fs = require('fs');
 
 const prisma = new PrismaClient();
 
@@ -20,7 +21,8 @@ const insertArtists = () => {
 				// @ts-ignore
 				data: {
 					name: artist.name,
-					geniusId: artist.id,
+					source: 'genius',
+					sourceId: artist.id,
 					imageUrl: artist.image_url,
 					headerImageUrl: artist.header_image_url,
 					url: artist.url,
@@ -50,7 +52,8 @@ const insertSongs = () => {
 				const newSong = await prisma.song.create({
 					// @ts-ignore
 					data: {
-						geniusId: song.id,
+						source: 'genius',
+						sourceId: song.id,
 						artist_names: song.artist_names,
 						description: song.description.html,
 						full_title: song.full_title,
@@ -78,9 +81,48 @@ const insertSongs = () => {
 	});
 };
 
+const insertDiscogsArtists = async () => {
+	let i = 50;
+
+	while (i < 1000) {
+		// read file
+
+		const filePath = process.cwd() + `/1000-discogs-artists-${i}.json`;
+
+		// insert from file
+
+		await fs.readFile(filePath, (err, data) => {
+			const artists = JSON.parse(String(data));
+
+			artists.forEach(async (artist) => {
+				if (!!artist) {
+					const newArtist = await prisma.artist.create({
+						// @ts-ignore
+						data: {
+							name: artist.name,
+							source: 'discogs',
+							sourceId: artist.id,
+							imageUrl: artist.images?.[0]?.uri || '',
+							headerImageUrl: artist.images?.[0]?.uri || '',
+							url: artist.uri,
+							description: artist.profile
+						}
+					});
+
+					console.log('artist inserted:');
+					console.log(newArtist);
+				}
+			});
+		});
+
+		i += 50;
+	}
+};
+
 async function main() {
 	insertArtists();
 	insertSongs();
+	insertDiscogsArtists();
 }
 
 main()

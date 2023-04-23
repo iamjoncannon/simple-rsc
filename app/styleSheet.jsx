@@ -6,15 +6,29 @@ import styled from 'styled-components';
 */
 
 export const StyledContainer = styled.div`
+	min-height: 100vh;
+	background-color: #202124;
+
+	.magnifying-glass {
+		height: 1.5rem;
+		position: relative;
+		right: 2.5rem;
+	}
+
 	h1 {
 		cursor: pointer;
 		font-size: 2rem;
+	}
+
+	.jenius-logo {
+		margin-left: 2rem;
 	}
 
 	input {
 		width: 15rem;
 		padding-left: 1rem;
 		margin-left: 4rem;
+		height: 2.5rem;
 	}
 
 	header {
@@ -24,6 +38,8 @@ export const StyledContainer = styled.div`
 		background-color: #fffc64;
 		height: 3.5rem;
 		padding: 0.5rem;
+		position: sticky;
+		top: 0;
 	}
 
 	main {
@@ -39,7 +55,11 @@ export const StyledContainer = styled.div`
 
 	.genius-card-container {
 		margin: 2rem;
+		min-width: 25vw;
 		max-width: 50vw;
+		background-color: #64ffaf;
+		padding: 1rem;
+		border-radius: 2rem;
 
 		@media (max-width: 1000px) {
 			max-width: 90%;
@@ -62,6 +82,7 @@ export const StyledContainer = styled.div`
 
 		> div {
 			width: 17rem;
+			margin-bottom: 1rem;
 		}
 	}
 
@@ -74,9 +95,14 @@ export const StyledContainer = styled.div`
 			margin: auto;
 		}
 
+		img {
+			max-height: 10rem;
+			width: fit-content;
+		}
+
 		.img-hero {
-			height: 10rem;
-			height: fit-content;
+			max-height: 20rem;
+			width: fit-content;
 			margin: auto;
 		}
 

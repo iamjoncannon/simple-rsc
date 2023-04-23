@@ -9,17 +9,21 @@ datasource db {
 
 model Artist {
   id             String @id @default(uuid())
-  geniusId       Int
+  sourceId       Int
   name           String
   imageUrl       String
   headerImageUrl String
   url            String
   description    String
+  source         String
+
+  @@unique([sourceId, name, source])
 }
 
 model Song {
   id                           String  @id @default(uuid())
-  geniusId                     Int
+  sourceId                     Int
+  source                       String
   artist_names                 String?
   description                  String?
   full_title                   String?
@@ -35,4 +39,6 @@ model Song {
   song_art_image_thumbnail_url String?
   song_art_image_url           String?
   searchIndex                  String?
+
+  @@unique([sourceId, title, source])
 }

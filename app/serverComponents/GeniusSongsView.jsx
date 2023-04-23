@@ -17,22 +17,22 @@ const GeniusSongCard = ({ song }) => {
 };
 
 async function GeniusSongsView({ search, songData }) {
-	return (
+	return search?.length > MIN_SEARCH_LENGTH ? (
 		<div className="genius-card-container">
-			{search?.length > MIN_SEARCH_LENGTH ? (
-				<>
-					<h3>{`Genius Song Results for "${search}": ${songData?.length}`}</h3>
+			<>
+				<h3>
+					<i>{`Genius Song Results for "${search}": ${songData?.length}`}</i>
+				</h3>
 
-					<div className="genius-card-container-2">
-						{songData?.map((song) => (
-							<GeniusSongCard key={song?.id} {...{ song }} />
-						))}
-					</div>
-				</>
-			) : (
-				<></>
-			)}
+				<div className="genius-card-container-2">
+					{songData?.map((song) => (
+						<GeniusSongCard key={song?.id} {...{ song }} />
+					))}
+				</div>
+			</>
 		</div>
+	) : (
+		<></>
 	);
 }
 

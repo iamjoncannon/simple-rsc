@@ -1,16 +1,23 @@
 import fs from 'node:fs';
-import { accessToken } from './accessToken.js';
+import pkg from 'disconnect';
+import { accessToken, discogs_consumer_key, discogs_consumer_secret } from './token.js';
+const { Client } = pkg;
+
+const discogs = new Client({
+	consumerKey: discogs_consumer_key,
+	consumerSecret: discogs_consumer_secret
+});
 
 const entity = 'songs';
-const outfile = '/1000songs.json';
+const outfile = '/1000-genius-songs';
 
 let artists = [];
 const size = 10000;
-const fileSize = 500;
-const start = 1000;
+const fileSize = 50;
+const start = 3001;
 const waitInSeconds = 0.5; // try not to get throttled
 
-const call = (i) => {
+const geniusCall = (i) => {
 	fetch(`https://api.genius.com/${entity}/${i}?access_token=${accessToken}&text_format=html`, {
 		headers: {
 			accept: 'application/json, text/plain, */*',
@@ -31,24 +38,42 @@ const call = (i) => {
 			return res.json();
 		})
 		.then((data) => {
-			console.log('i data ', i, data);
+			if (i % 25 === 0) {
+				console.log('i data ', i, data);
+			}
 			artists.push(data);
 		});
 };
+
+const discogsCall = (i) =>
+	discogs
+		.get(`/${entity}/${i}`)
+		.then((data) => {
+			if (i % 25 === 0) {
+				console.log('i data ', i, data);
+			}
+			artists.push(data);
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+
+const call = geniusCall;
 
 (function myLoop(i) {
 	setTimeout(function () {
 		call(i);
 		++i;
-		if (i < size) {
-			myLoop(i);
-		}
 
 		if (i % fileSize === 0) {
-			fs.writeFile(process.cwd() + outfile + `-${i}`, JSON.stringify(artists), (err) =>
+			fs.writeFile(process.cwd() + outfile + `-${i}.json`, JSON.stringify(artists), (err) =>
 				console.log(err)
 			);
 			artists = [];
+		}
+
+		if (i < size) {
+			myLoop(i);
 		}
 	}, waitInSeconds * 1000);
 })(start);

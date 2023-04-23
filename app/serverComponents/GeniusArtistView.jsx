@@ -17,22 +17,22 @@ const GeniusArtistCard = ({ artist }) => {
 };
 
 async function GeniusArtistView({ search, artistData }) {
-	return (
+	return search?.length > MIN_SEARCH_LENGTH ? (
 		<div className="genius-card-container">
-			{search?.length > MIN_SEARCH_LENGTH ? (
-				<>
-					<h3>{`Genius Artist Results for "${search}": ${artistData?.length}`}</h3>
+			<>
+				<h3>
+					<i>{`Genius Artist Results for "${search}": ${artistData?.length}`}</i>
+				</h3>
 
-					<div className="genius-card-container-2">
-						{artistData?.map((artist) => (
-							<GeniusArtistCard key={artist?.id} {...{ artist }} />
-						))}
-					</div>
-				</>
-			) : (
-				<></>
-			)}
+				<div className="genius-card-container-2">
+					{artistData?.map((artist) => (
+						<GeniusArtistCard key={artist?.id} {...{ artist }} />
+					))}
+				</div>
+			</>
 		</div>
+	) : (
+		<></>
 	);
 }
 
