@@ -58,10 +58,10 @@ export const StyledContainer = styled.div`
 		align-items: center;
 		justify-content: space-evenly;
 
-		@media (max-width: ${breakPointLarge}) {
-			flex-direction: column;
-		}
-	}
+	// 	@media (max-width: ${breakPointLarge}) {
+	// 		flex-direction: column;
+	// 	}
+	// }
 
 	.genius-card-container {
 		margin: 2rem;
@@ -100,34 +100,6 @@ export const StyledContainer = styled.div`
 		}
 	}
 
-	.genius-card-song {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		max-width: 20rem;
-		margin-left: auto;
-		margin-right: auto;
-
-		img {
-			height: 7.5rem;
-			width: fit-content;
-		}
-
-		table {
-			border-collapse: collapse;
-			width: 100%;
-			max-width: 80rem;
-			margin-bottom: 1rem;
-		}
-
-		th,
-		td {
-			padding: 8px;
-			text-align: left;
-		}
-	}
-
 	.genius-card-artist {
 		flex-direction: column;
 
@@ -158,6 +130,76 @@ export const StyledContainer = styled.div`
 
 		iframe {
 			max-width: 100%;
+		}
+	}
+
+	.grid-section-artist {
+		// background-color: green;
+		height: calc(100vh - 3.5rem);
+		flex: 3;
+	}
+
+	/* song */
+
+	.grid-section-song {
+		height: calc(100vh - 3.5rem);
+		flex: 1;
+		min-width: 20rem;
+		max-width: 20rem;
+	}
+
+	.genius-card-container--song {
+		background-color: #fffc64;
+		margin-top: 2rem;
+		margin-right: 2rem;
+		padding: .25rem;
+		border-radius: .5rem;
+
+		h3 {
+			font-size: .75rem !important; 
+		}
+
+	}
+
+	.genius-card-container--song-2 {
+		max-height: calc(100vh - 10rem);
+		min-height: 50vh;
+		overflow-y: scroll;
+		margin-top: 0.5rem;
+	}
+
+	.genius-card-song {
+		display: flex;
+		background-color: #fffc64;
+		border-bottom: 1px solid black;
+		padding: .25rem .5rem .25rem .5rem;
+
+	
+		img {
+			height: 5rem;
+			min-width: fit-content;
+			margin-right: 1rem;
+			padding-top: .25rem;
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			max-width: 80rem;
+
+			tr:first-child {
+				td {
+					font-size: .8rem;
+					font-weight: bold;
+				}
+			}
+		}
+
+		th,
+		td {
+			padding-bottom: 2px;
+			text-align: left;
+			font-size: .7rem;
 		}
 	}
 `;

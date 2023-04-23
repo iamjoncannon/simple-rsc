@@ -4,36 +4,41 @@ import { MIN_SEARCH_LENGTH } from '../../constants';
 
 const SongCard = ({ song }) => {
 	return (
-		<div className="genius-card genius-card-song">
+		<div className="genius-card-song">
+			<img src={song?.song_art_image_thumbnail_url} />
+
 			<table>
 				<tr>
-					<td>Title</td> <td>{song.title}</td>
+					<td>{song.title}</td>
 				</tr>
 				<tr>
-					<td>Artist</td> <td>{song.artist_names}</td>
+					<td>
+						<a href={`/?search=${song.artist_names}`}>{song.artist_names}</a>
+					</td>
 				</tr>
 				<tr>
-					<td>Album</td> <td>{song.albumName}</td>
+					<td>
+						<a href={`/?search=${song.albumName}`}>{song.albumName}</a>
+					</td>
 				</tr>
 				<tr>
-					<td>Released</td> <td>{song.release_date}</td>
+					<td>{song.release_date}</td>
 				</tr>
 			</table>
-			<img src={song?.song_art_image_thumbnail_url} />
 		</div>
 	);
 };
 
 async function SongsView({ search, songData }) {
 	return search?.length > MIN_SEARCH_LENGTH && songData?.length > 0 ? (
-		<div className="genius-card-container animate__animated animate__fadeIn ">
+		<div className="genius-card-container--song animate__animated animate__fadeIn ">
 			<>
 				<h3>
-					<i>{`Genius Song Results for "${search}": ${songData?.length}`}</i>
+					<i>{`Genius Song Results: ${songData?.length}`}</i>
 				</h3>
 
-				<div className="genius-card-container-2">
-					{songData?.map((song) => (
+				<div className="genius-card-container--song-2">
+					{songData?.slice(0, 10)?.map((song) => (
 						<SongCard key={song?.id} {...{ song }} />
 					))}
 				</div>

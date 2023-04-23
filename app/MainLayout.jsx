@@ -34,7 +34,7 @@ const MainLayout = () => {
 				</i>
 				<input
 					ref={inputRef}
-					placeholder="Search for Artist"
+					placeholder="Search Jenius"
 					defaultValue={search}
 					onChange={(e) => {
 						setSearch(e.target.value);
@@ -49,15 +49,24 @@ const MainLayout = () => {
 						<ArtistCard />
 					</ServerComponentShell>
 				)}
-				<ServerComponentShell>
-					<ArtistView {...{ search, source: 'genius' }} />
-				</ServerComponentShell>
-				<ServerComponentShell>
-					<ArtistView {...{ search, source: 'discogs' }} />
-				</ServerComponentShell>
-				<ServerComponentShell>
-					<SongsView {...{ search }} />
-				</ServerComponentShell>
+
+				{search?.length > MIN_SEARCH_LENGTH && (
+					<>
+						<div className="grid-section-artist">
+							<ServerComponentShell>
+								<ArtistView {...{ search, source: 'genius' }} />
+							</ServerComponentShell>
+							<ServerComponentShell>
+								<ArtistView {...{ search, source: 'discogs' }} />
+							</ServerComponentShell>
+						</div>
+						<div className="grid-section-song">
+							<ServerComponentShell>
+								<SongsView {...{ search }} />
+							</ServerComponentShell>
+						</div>
+					</>
+				)}
 			</main>
 		</StyledContainer>
 	);

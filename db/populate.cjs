@@ -78,7 +78,7 @@ const insertGeniusSong = async (each) => {
 					release_date: song.release_date,
 					song_art_image_thumbnail_url: song.song_art_image_thumbnail_url,
 					song_art_image_url: song.song_art_image_url,
-					searchIndex: `${song.artist_names} ${song.title} ${song.albumName} ${featured_artists} ${primary_artists} ${writer_artists}`
+					searchIndex: `${song.artist_names} ${song.title} ${song.album?.name} ${featured_artists} ${primary_artists} ${writer_artists}`
 				}
 			});
 		} catch (err) {
@@ -90,7 +90,7 @@ const insertGeniusSong = async (each) => {
 const insertGeniusSongs = async () => {
 	let i = 3050;
 
-	while (i < 5000) {
+	while (i < 20000) {
 		console.log('insertGeniusSongs ', i);
 		// read file
 

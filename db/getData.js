@@ -11,11 +11,11 @@ const discogs = new Client({
 const entity = 'songs';
 const outfile = '/1000-genius-songs';
 
-let artists = [];
-const size = 10000;
+let entities = [];
+const size = 20000;
 const fileSize = 50;
-const start = 3001;
-const waitInSeconds = 0.5; // try not to get throttled
+const start = 10001;
+const waitInSeconds = 0.25; // try not to get throttled
 
 const geniusCall = (i) => {
 	fetch(`https://api.genius.com/${entity}/${i}?access_token=${accessToken}&text_format=html`, {
@@ -41,7 +41,7 @@ const geniusCall = (i) => {
 			if (i % 25 === 0) {
 				console.log('i data ', i, data);
 			}
-			artists.push(data);
+			entities.push(data);
 		});
 };
 
@@ -52,7 +52,7 @@ const discogsCall = (i) =>
 			if (i % 25 === 0) {
 				console.log('i data ', i, data);
 			}
-			artists.push(data);
+			entities.push(data);
 		})
 		.catch((err) => {
 			console.log(err);
@@ -66,10 +66,10 @@ const call = geniusCall;
 		++i;
 
 		if (i % fileSize === 0) {
-			fs.writeFile(process.cwd() + outfile + `-${i}.json`, JSON.stringify(artists), (err) =>
+			fs.writeFile(process.cwd() + outfile + `-${i}.json`, JSON.stringify(entities), (err) =>
 				console.log(err)
 			);
-			artists = [];
+			entities = [];
 		}
 
 		if (i < size) {

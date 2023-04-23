@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { MIN_SEARCH_LENGTH } from '../../constants';
 import hydratorMap from '../../hydratorMap';
@@ -12,7 +13,7 @@ async function ArtistView({ search, artistData, source }) {
 				</h3>
 
 				<div className="genius-card-container-2">
-					{artistData?.map((artist) => (
+					{artistData?.slice(0, 10)?.map((artist) => (
 						<ArtistCard key={artist?.id} {...{ artist }} />
 					))}
 				</div>

@@ -4,6 +4,15 @@ const prisma = new PrismaClient();
 
 // fetch data from user input
 
+const getFallback = async () =>
+	await prisma.artist.findFirst({
+		where: {
+			name: {
+				equals: 'Jimi Hendrix'
+			}
+		}
+	});
+
 const ArtistCard = async () => {
 	const id = Math.floor(Math.random() * 1000);
 
@@ -12,7 +21,7 @@ const ArtistCard = async () => {
 
 	return {
 		// @ts-ignore
-		artist: result[0]
+		artist: result[0] || (await getFallback())
 	};
 };
 
@@ -24,8 +33,7 @@ const SongsView = async ({ search }) => {
 				searchIndex: {
 					contains: String(search)
 				}
-			},
-			take: 100
+			}
 		});
 	}
 
@@ -46,8 +54,7 @@ const ArtistView = async ({ search, source }) => {
 				source: {
 					equals: String(source)
 				}
-			},
-			take: 100
+			}
 		});
 	}
 

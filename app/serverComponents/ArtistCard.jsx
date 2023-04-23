@@ -1,7 +1,7 @@
 import React from 'react';
 import hydratorMap from '../../hydratorMap';
 
-const ArtistCard = ({ artist }) => {
+const ArtistCard = async ({ artist }) => {
 	return (
 		<div className="genius-card genius-card-artist animate__animated animate__fadeIn">
 			<div>
