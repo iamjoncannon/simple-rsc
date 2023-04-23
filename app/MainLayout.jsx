@@ -1,12 +1,13 @@
 // @ts-nocheck
 import React from 'react';
-import SongsView from './serverComponents/SongsView.jsx';
-import ArtistView from './serverComponents/ArtistView.jsx';
+import SongsListView from './serverComponents/SongsListView.jsx';
+import ArtistListView from './serverComponents/ArtistListView.jsx';
 import ServerComponentShell from './ServerComponentShell.jsx';
 import { StyledContainer } from './styleSheet.jsx';
 import { MagnifyingGlass, RandomIcon } from './components.jsx';
-import ArtistCard from './serverComponents/ArtistCard.jsx';
+import ArtistFeatureCard from './serverComponents/ArtistFeatureCard.jsx';
 import { MIN_SEARCH_LENGTH } from '../constants.js';
+import hydratorConstants from '../server/hydratorConstants.js';
 
 const MainLayout = () => {
 	const [search, setSearch] = React.useState();
@@ -46,7 +47,7 @@ const MainLayout = () => {
 			<main>
 				{search?.length <= MIN_SEARCH_LENGTH && (
 					<ServerComponentShell>
-						<ArtistCard />
+						<ArtistFeatureCard hydrator={hydratorConstants.ArtistFeatureCardForSplashPage} />
 					</ServerComponentShell>
 				)}
 
@@ -54,15 +55,23 @@ const MainLayout = () => {
 					<>
 						<div className="grid-section-artist">
 							<ServerComponentShell>
-								<ArtistView {...{ search, source: 'genius' }} />
-							</ServerComponentShell>
-							<ServerComponentShell>
-								<ArtistView {...{ search, source: 'discogs' }} />
+								<ArtistFeatureCard
+									hydrator={hydratorConstants.ArtistFeatureCardOneResult}
+									{...{ search }}
+								/>
 							</ServerComponentShell>
 						</div>
-						<div className="grid-section-song">
+						<div className="grid-section-list grid-section-list--artist">
 							<ServerComponentShell>
-								<SongsView {...{ search }} />
+								<ArtistListView {...{ search, source: 'genius' }} />
+							</ServerComponentShell>
+							<ServerComponentShell>
+								<ArtistListView {...{ search, source: 'discogs' }} />
+							</ServerComponentShell>
+						</div>
+						<div className="grid-section-list grid-section-list--song">
+							<ServerComponentShell>
+								<SongsListView {...{ search }} />
 							</ServerComponentShell>
 						</div>
 					</>

@@ -5,10 +5,12 @@ import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpa
 const initialCache = new Map();
 
 function ServerComponentShell(props) {
-	const hydrator = props.children.type.hydrator;
+	const componentName = props.children.type.componentName;
 	const childProps = props.children.props;
+	// define hydrator as prop or fallback
+	const hydrator = childProps.hydrator || props.children.type.hydrator;
 
-	const propsForServer = JSON.stringify({ hydrator, ...childProps });
+	const propsForServer = JSON.stringify({ hydrator, componentName, ...childProps });
 
 	const init = {
 		method: 'POST',

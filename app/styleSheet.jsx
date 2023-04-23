@@ -55,13 +55,9 @@ export const StyledContainer = styled.div`
 	main {
 		display: flex;
 		flex-direction: row;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: space-evenly;
-
-	// 	@media (max-width: ${breakPointLarge}) {
-	// 		flex-direction: column;
-	// 	}
-	// }
+	}
 
 	.genius-card-container {
 		margin: 2rem;
@@ -100,8 +96,14 @@ export const StyledContainer = styled.div`
 		}
 	}
 
+	.genius-card-artist--no-result {
+		min-width: 15rem;
+		text-align: center;
+	}
+
 	.genius-card-artist {
 		flex-direction: column;
+		margin-top: 2rem;
 
 		.title {
 			font-weight: 800;
@@ -133,53 +135,73 @@ export const StyledContainer = styled.div`
 		}
 	}
 
+	/* grid */
+
 	.grid-section-artist {
-		// background-color: green;
-		height: calc(100vh - 3.5rem);
-		flex: 3;
+		min-height: calc(100vh - 3.5rem);
+		flex: 2;
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
 	}
 
-	/* song */
-
-	.grid-section-song {
+	.grid-section-list {
 		height: calc(100vh - 3.5rem);
 		flex: 1;
 		min-width: 20rem;
 		max-width: 20rem;
 	}
 
-	.genius-card-container--song {
+	.grid-section-list--artist {
+		@media (max-width: 700px) {
+			display: none;
+		}
+	}
+
+	.grid-section-list--song {
+		@media (max-width: 1000px) {
+			display: none;
+		}
+	}
+
+	/* list containers */
+
+	.genius-list-container {
 		background-color: #fffc64;
 		margin-top: 2rem;
 		margin-right: 2rem;
-		padding: .25rem;
-		border-radius: .5rem;
+		padding: 0.25rem;
+		border-radius: 0.5rem;
 
 		h3 {
-			font-size: .75rem !important; 
+			font-size: 0.75rem !important;
 		}
-
 	}
 
-	.genius-card-container--song-2 {
+	.genius-list-container-2 {
 		max-height: calc(100vh - 10rem);
-		min-height: 50vh;
+		min-height: 38vh;
 		overflow-y: scroll;
 		margin-top: 0.5rem;
 	}
+
+	.genius-list-container--half {
+		max-height: 38vh;
+	}
+
+	/* song */
 
 	.genius-card-song {
 		display: flex;
 		background-color: #fffc64;
 		border-bottom: 1px solid black;
-		padding: .25rem .5rem .25rem .5rem;
+		padding: 0.25rem 0.5rem 0.25rem 0.5rem;
 
-	
 		img {
 			height: 5rem;
 			min-width: fit-content;
 			margin-right: 1rem;
-			padding-top: .25rem;
+			padding-top: 0.25rem;
 		}
 
 		table {
@@ -189,7 +211,7 @@ export const StyledContainer = styled.div`
 
 			tr:first-child {
 				td {
-					font-size: .8rem;
+					font-size: 0.8rem;
 					font-weight: bold;
 				}
 			}
@@ -199,7 +221,7 @@ export const StyledContainer = styled.div`
 		td {
 			padding-bottom: 2px;
 			text-align: left;
-			font-size: .7rem;
+			font-size: 0.7rem;
 		}
 	}
 `;

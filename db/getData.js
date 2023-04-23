@@ -12,9 +12,9 @@ const entity = 'songs';
 const outfile = '/1000-genius-songs';
 
 let entities = [];
-const size = 20000;
+const size = 30000;
 const fileSize = 50;
-const start = 10001;
+const start = 20001;
 const waitInSeconds = 0.25; // try not to get throttled
 
 const geniusCall = (i) => {

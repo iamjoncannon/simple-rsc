@@ -1,5 +1,5 @@
 import React from 'react';
-import hydratorMap from '../../hydratorMap';
+import hydratorMap from '../../server/hydratorConstants';
 import { MIN_SEARCH_LENGTH } from '../../constants';
 
 const SongCard = ({ song }) => {
@@ -29,15 +29,15 @@ const SongCard = ({ song }) => {
 	);
 };
 
-async function SongsView({ search, songData }) {
+async function SongsListView({ search, songData }) {
 	return search?.length > MIN_SEARCH_LENGTH && songData?.length > 0 ? (
-		<div className="genius-card-container--song animate__animated animate__fadeIn ">
+		<div className="genius-list-container animate__animated animate__fadeIn ">
 			<>
 				<h3>
 					<i>{`Genius Song Results: ${songData?.length}`}</i>
 				</h3>
 
-				<div className="genius-card-container--song-2">
+				<div className="genius-list-container-2">
 					{songData?.slice(0, 10)?.map((song) => (
 						<SongCard key={song?.id} {...{ song }} />
 					))}
@@ -45,16 +45,24 @@ async function SongsView({ search, songData }) {
 			</>
 		</div>
 	) : (
-		<></>
+		<div className="genius-list-container animate__animated animate__fadeIn ">
+			<>
+				<h3>
+					<i>{`Genius Song Results: 0`}</i>
+				</h3>
+				<div className="genius-list-container-2"></div>
+			</>
+		</div>
 	);
 }
 
 // this has to be explicitly set since the code
 // is minified and the component name var will
-// be transformed from SongsView -> "TO", "VQ" etc
+// be transformed from SongsListView -> "TO", "VQ" etc
 
 // also, we might want to be flexible and have a
 // one to many relationship between components
 // and their server hydrators
-SongsView.hydrator = hydratorMap.SongsView;
-export default SongsView;
+SongsListView.hydrator = hydratorMap.SongsListView;
+SongsListView.componentName = hydratorMap.SongsListView;
+export default SongsListView;

@@ -7,7 +7,7 @@ import { relative } from 'node:path';
 import chokidar from 'chokidar';
 import { createElement } from 'react';
 import * as ReactServerDom from 'react-server-dom-webpack/server.browser';
-import hydratorMap from '../hydratorMap.js';
+import hydratorMap from './hydratorConstants.js';
 import hydrators from './hydrators.js';
 
 const USE_CLIENT_ANNOTATIONS = ['"use client"', "'use client'"];
@@ -164,13 +164,14 @@ export default class RscService {
 	async stream(propsFromShell) {
 		// resolve hydrator for component
 
-		if (!propsFromShell.hydrator || !hydratorMap[propsFromShell.hydrator]) {
+		if (!propsFromShell.componentName || !propsFromShell.hydrator) {
 			return new Response('server error- failed to hydrate server component', {
 				headers: { 'Content-type': 'text/x-component' }
 			});
 		}
 
-		const hydrator = hydratorMap[propsFromShell.hydrator];
+		const hydrator = propsFromShell.hydrator;
+		const componentName = propsFromShell.componentName;
 
 		// process props- take view layer props and resolve data for hydration
 
@@ -178,7 +179,9 @@ export default class RscService {
 
 		const PageModule = await import(
 			this.resolveServerDist(
-				`${hydrator}.js${process.env.NODE_ENV === 'development' ? `?invalidate=${Date.now()}` : ''}`
+				`${componentName}.js${
+					process.env.NODE_ENV === 'development' ? `?invalidate=${Date.now()}` : ''
+				}`
 			).href
 		);
 

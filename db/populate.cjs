@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 const insertGeniusArtists = async () => {
 	let i = 1000;
 
-	while (i < 3000) {
+	while (i < 20001) {
 		console.log('insertGeniusArtists ', i);
 
 		// read file
@@ -90,7 +90,7 @@ const insertGeniusSong = async (each) => {
 const insertGeniusSongs = async () => {
 	let i = 3050;
 
-	while (i < 20000) {
+	while (i < 20001) {
 		console.log('insertGeniusSongs ', i);
 		// read file
 

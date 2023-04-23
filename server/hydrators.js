@@ -2,7 +2,23 @@ import { PrismaClient } from '@prisma/client';
 import { MIN_SEARCH_LENGTH } from '../constants.js';
 const prisma = new PrismaClient();
 
-// fetch data from user input
+const ArtistFeatureCardOneResult = async ({ search }) => {
+	let artistData = [];
+	if (search?.length > MIN_SEARCH_LENGTH) {
+		// @ts-ignore
+		artistData = await prisma.artist.findMany({
+			where: {
+				name: {
+					contains: String(search)
+				}
+			}
+		});
+	}
+
+	return {
+		artist: artistData[0]
+	};
+};
 
 const getFallback = async () =>
 	await prisma.artist.findFirst({
@@ -13,7 +29,7 @@ const getFallback = async () =>
 		}
 	});
 
-const ArtistCard = async () => {
+const ArtistFeatureCardForSplashPage = async () => {
 	const id = Math.floor(Math.random() * 1000);
 
 	const result =
@@ -25,7 +41,7 @@ const ArtistCard = async () => {
 	};
 };
 
-const SongsView = async ({ search }) => {
+const SongsListView = async ({ search }) => {
 	let songData = [];
 	if (search?.length > MIN_SEARCH_LENGTH) {
 		songData = await prisma.song.findMany({
@@ -43,7 +59,7 @@ const SongsView = async ({ search }) => {
 	};
 };
 
-const ArtistView = async ({ search, source }) => {
+const ArtistListView = async ({ search, source }) => {
 	let artistData = [];
 	if (search?.length > MIN_SEARCH_LENGTH) {
 		artistData = await prisma.artist.findMany({
@@ -66,9 +82,10 @@ const ArtistView = async ({ search, source }) => {
 };
 
 const hydrators = {
-	SongsView,
-	ArtistView,
-	ArtistCard
+	SongsListView,
+	ArtistListView,
+	ArtistFeatureCardForSplashPage,
+	ArtistFeatureCardOneResult
 };
 
 export default hydrators;
