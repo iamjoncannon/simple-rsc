@@ -3,6 +3,6 @@
 */
 
 export default {
-	GeniusSongsView: 'GeniusSongsView',
-	GeniusArtistView: 'GeniusArtistView'
+	SongsView: 'SongsView',
+	ArtistView: 'ArtistView'
 };

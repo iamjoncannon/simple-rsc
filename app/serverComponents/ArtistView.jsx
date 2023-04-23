@@ -2,7 +2,7 @@ import React from 'react';
 import { MIN_SEARCH_LENGTH } from '../../constants';
 import hydratorMap from '../../hydratorMap';
 
-const GeniusArtistCard = ({ artist }) => {
+const ArtistCard = ({ artist }) => {
 	return (
 		<div className="genius-card genius-card-artist">
 			<div>
@@ -16,7 +16,7 @@ const GeniusArtistCard = ({ artist }) => {
 	);
 };
 
-async function GeniusArtistView({ search, artistData }) {
+async function ArtistView({ search, artistData }) {
 	return search?.length > MIN_SEARCH_LENGTH ? (
 		<div className="genius-card-container">
 			<>
@@ -26,7 +26,7 @@ async function GeniusArtistView({ search, artistData }) {
 
 				<div className="genius-card-container-2">
 					{artistData?.map((artist) => (
-						<GeniusArtistCard key={artist?.id} {...{ artist }} />
+						<ArtistCard key={artist?.id} {...{ artist }} />
 					))}
 				</div>
 			</>
@@ -36,5 +36,5 @@ async function GeniusArtistView({ search, artistData }) {
 	);
 }
 
-GeniusArtistView.hydrator = hydratorMap.GeniusArtistView;
-export default GeniusArtistView;
+ArtistView.hydrator = hydratorMap.ArtistView;
+export default ArtistView;

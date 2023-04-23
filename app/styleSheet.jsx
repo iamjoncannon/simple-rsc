@@ -86,6 +86,30 @@ export const StyledContainer = styled.div`
 		}
 	}
 
+	.genius-card-song {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		img {
+			height: 7.5rem;
+			width: fit-content;
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			max-width: 80rem;
+			margin-bottom: 1rem;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: left;
+		}
+	}
+
 	.genius-card-artist {
 		flex-direction: column;
 

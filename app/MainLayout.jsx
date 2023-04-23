@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import GeniusSongsView from './serverComponents/GeniusSongsView.jsx';
-import GeniusArtistView from './serverComponents/GeniusArtistView.jsx';
+import SongsView from './serverComponents/SongsView.jsx';
+import ArtistView from './serverComponents/ArtistView.jsx';
 import Shell from './Shell.jsx';
 import { StyledContainer } from './styleSheet.jsx';
 import { MagnifyingGlass } from './components.jsx';
@@ -22,10 +22,13 @@ const MainLayout = () => {
 			</header>
 			<main>
 				<Shell>
-					<GeniusArtistView {...{ search }} />
+					<ArtistView {...{ search }} />
 				</Shell>
 				<Shell>
-					<GeniusSongsView {...{ search }} />
+					<ArtistView {...{ search }} />
+				</Shell>
+				<Shell>
+					<SongsView {...{ search }} />
 				</Shell>
 			</main>
 		</StyledContainer>

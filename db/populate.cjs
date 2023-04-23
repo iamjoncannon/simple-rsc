@@ -6,7 +6,7 @@ const songs2 = require('./1000songs-1500.json');
 const songs3 = require('./1000songs-2000.json');
 const songs4 = require('./1000songs-2500.json');
 const songs5 = require('./1000songs-3000.json');
-const fs = require('fs');
+const fs = require('node:fs');
 
 const prisma = new PrismaClient();
 

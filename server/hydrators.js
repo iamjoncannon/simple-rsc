@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 // fetch data from user input
 
-const GeniusSongsView = async ({ search }) => {
+const SongsView = async ({ search }) => {
 	let songData = [];
 	if (search?.length > MIN_SEARCH_LENGTH) {
 		songData = await prisma.song.findMany({
@@ -22,7 +22,7 @@ const GeniusSongsView = async ({ search }) => {
 	};
 };
 
-const GeniusArtistView = async ({ search }) => {
+const ArtistView = async ({ search }) => {
 	let artistData = [];
 	if (search?.length > MIN_SEARCH_LENGTH) {
 		artistData = await prisma.artist.findMany({
@@ -41,8 +41,8 @@ const GeniusArtistView = async ({ search }) => {
 };
 
 const hydrators = {
-	GeniusSongsView,
-	GeniusArtistView
+	SongsView,
+	ArtistView
 };
 
 export default hydrators;
