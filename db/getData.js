@@ -4,7 +4,7 @@ import { accessToken } from './accessToken.js';
 const entity = 'songs';
 const outfile = '/1000songs.json';
 
-const artists = [];
+let artists = [];
 const size = 10000;
 const fileSize = 500;
 const start = 1000;
@@ -48,6 +48,7 @@ const call = (i) => {
 			fs.writeFile(process.cwd() + outfile + `-${i}`, JSON.stringify(artists), (err) =>
 				console.log(err)
 			);
+			artists = [];
 		}
 	}, waitInSeconds * 1000);
 })(start);

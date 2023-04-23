@@ -1,21 +1,11 @@
-import React from 'react';
-import ComponentC from './C/ComponentC';
+import React, { Suspense } from 'react';
 import hydratorMap from '../../hydratorMap';
 import { MIN_SEARCH_LENGTH } from '../../constants';
 
 const GeniusSongCard = ({ song }) => {
 	return (
-		<div
-			style={{
-				backgroundColor: '#fffc64',
-				padding: '1rem',
-				margin: '1rem',
-				display: 'flex',
-				justifyContent: 'space-around',
-				borderRadius: '2rem'
-			}}
-		>
-			<div style={{ width: '17rem' }}>
+		<div className="genius-card">
+			<div>
 				<h4>Artist: {song.artist_names}</h4>
 				<h4>Title: {song.title}</h4>
 				<h4>Album: {song.albumName}</h4>
@@ -28,12 +18,12 @@ const GeniusSongCard = ({ song }) => {
 
 async function GeniusSongsView({ search, songData }) {
 	return (
-		<div style={{ margin: '2rem', maxWidth: '35rem' }}>
+		<div className="genius-card-container">
 			{search?.length > MIN_SEARCH_LENGTH ? (
 				<>
 					<h3>{`Genius Song Results for "${search}": ${songData?.length}`}</h3>
 
-					<div style={{ height: '75vh', overflowY: 'scroll', marginTop: '.5rem' }}>
+					<div className="genius-card-container-2">
 						{songData?.map((song) => (
 							<GeniusSongCard key={song?.id} {...{ song }} />
 						))}
