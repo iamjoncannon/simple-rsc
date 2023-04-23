@@ -32,6 +32,12 @@ export const StyledContainer = styled.div`
 		padding-left: 1rem;
 		margin-left: 4rem;
 		height: 2.5rem;
+		border-radius: 1rem;
+
+		&:hover,
+		&:focus {
+			outline: #64ffaf;
+		}
 	}
 
 	header {
@@ -43,6 +49,7 @@ export const StyledContainer = styled.div`
 		padding: 0.5rem;
 		position: sticky;
 		top: 0;
+		z-index: 1;
 	}
 
 	main {
@@ -85,6 +92,7 @@ export const StyledContainer = styled.div`
 		justify-content: space-around;
 		border-radius: 2rem;
 		overflow-x: hidden;
+		max-width: 50rem;
 
 		> div {
 			width: 17rem;

@@ -4,6 +4,18 @@ const prisma = new PrismaClient();
 
 // fetch data from user input
 
+const ArtistCard = async () => {
+	const id = Math.floor(Math.random() * 1000);
+
+	const result =
+		await prisma.$queryRaw`SELECT * FROM Artist WHERE LENGTH(description) > 500 LIMIT 1000 OFFSET ${id}`;
+
+	return {
+		// @ts-ignore
+		artist: result[0]
+	};
+};
+
 const SongsView = async ({ search }) => {
 	let songData = [];
 	if (search?.length > MIN_SEARCH_LENGTH) {
@@ -12,7 +24,8 @@ const SongsView = async ({ search }) => {
 				searchIndex: {
 					contains: String(search)
 				}
-			}
+			},
+			take: 100
 		});
 	}
 
@@ -33,7 +46,8 @@ const ArtistView = async ({ search, source }) => {
 				source: {
 					equals: String(source)
 				}
-			}
+			},
+			take: 100
 		});
 	}
 
@@ -46,7 +60,8 @@ const ArtistView = async ({ search, source }) => {
 
 const hydrators = {
 	SongsView,
-	ArtistView
+	ArtistView,
+	ArtistCard
 };
 
 export default hydrators;

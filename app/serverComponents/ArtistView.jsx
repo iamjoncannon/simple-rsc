@@ -1,24 +1,11 @@
 import React from 'react';
 import { MIN_SEARCH_LENGTH } from '../../constants';
 import hydratorMap from '../../hydratorMap';
-
-const ArtistCard = ({ artist }) => {
-	return (
-		<div className="genius-card genius-card-artist">
-			<div>
-				<span className="title">{artist.name}</span>
-				<img src={artist?.headerImageUrl} className="img-hero" />
-			</div>
-			<div style={{ float: 'right' }}>
-				<h4 dangerouslySetInnerHTML={{ __html: artist.description }} />
-			</div>
-		</div>
-	);
-};
+import ArtistCard from './ArtistCard';
 
 async function ArtistView({ search, artistData, source }) {
 	return search?.length > MIN_SEARCH_LENGTH && artistData?.length > 0 ? (
-		<div className="genius-card-container">
+		<div className="genius-card-container animate__animated animate__fadeIn ">
 			<>
 				<h3>
 					<i>{`${source} Artist Results for "${search}": ${artistData?.length}`}</i>

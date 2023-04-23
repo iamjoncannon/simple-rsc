@@ -1,10 +1,10 @@
 // @ts-expect-error Module '"react"' has no exported member 'use'.
-import { useState, use, Suspense } from 'react';
+import { useState, use, Suspense, useMemo } from 'react';
 import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpack/client';
 
 const initialCache = new Map();
 
-function Shell(props) {
+function ServerComponentShell(props) {
 	const hydrator = props.children.type.hydrator;
 	const childProps = props.children.props;
 
@@ -20,16 +20,17 @@ function Shell(props) {
 	};
 
 	const url = '/rsc';
-	const [cache, setCache] = useState(initialCache);
-	if (!cache.has(propsForServer)) {
-		cache.set(propsForServer, createFromFetch(fetch(url, init)));
-	}
-	const lazyJsx = cache.get(propsForServer);
-	return (
-		<>
-			<Suspense fallback="loading">{use(lazyJsx)}</Suspense>
-		</>
-	);
+	const [cache] = useState(initialCache);
+
+	const lazyJsx = useMemo(() => {
+		if (!cache.has(propsForServer)) {
+			cache.set(propsForServer, createFromFetch(fetch(url, init)));
+		}
+
+		return cache.get(propsForServer);
+	}, [propsForServer]);
+
+	return <>{!lazyJsx.isPending ? use(lazyJsx) : <span>loading</span>}</>;
 }
 
-export default Shell;
+export default ServerComponentShell;

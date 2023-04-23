@@ -2,34 +2,59 @@
 import React from 'react';
 import SongsView from './serverComponents/SongsView.jsx';
 import ArtistView from './serverComponents/ArtistView.jsx';
-import Shell from './Shell.jsx';
+import ServerComponentShell from './ServerComponentShell.jsx';
 import { StyledContainer } from './styleSheet.jsx';
-import { MagnifyingGlass } from './components.jsx';
+import { MagnifyingGlass, RandomIcon } from './components.jsx';
+import ArtistCard from './serverComponents/ArtistCard.jsx';
+import { MIN_SEARCH_LENGTH } from '../constants.js';
 
 const MainLayout = () => {
 	const [search, setSearch] = React.useState('');
+	const inputRef = React.useRef(null);
+	const [isPending, startTransition] = React.useTransition();
+
+	const onLogoClick = React.useCallback(() => {
+		setSearch('');
+		if (inputRef?.current?.value) {
+			inputRef.current.value = '';
+		}
+	}, []);
 
 	return (
 		<StyledContainer>
 			<header>
-				<h1 className="jenius-logo">Jenius</h1>
+				<i>
+					<h1 className="jenius-logo" onClick={onLogoClick}>
+						Jenius
+					</h1>
+				</i>
 				<input
-					style={{}}
+					ref={inputRef}
 					placeholder="Search for Artist"
-					onChange={(e) => setSearch(e.target.value)}
+					onChange={(e) =>
+						startTransition(() => {
+							!isPending && setSearch(e.target.value);
+						})
+					}
 				></input>
 				<MagnifyingGlass />
+				<RandomIcon />
 			</header>
 			<main>
-				<Shell>
+				{search?.length <= MIN_SEARCH_LENGTH && (
+					<ServerComponentShell>
+						<ArtistCard />
+					</ServerComponentShell>
+				)}
+				<ServerComponentShell>
 					<ArtistView {...{ search, source: 'genius' }} />
-				</Shell>
-				<Shell>
+				</ServerComponentShell>
+				<ServerComponentShell>
 					<ArtistView {...{ search, source: 'discogs' }} />
-				</Shell>
-				<Shell>
+				</ServerComponentShell>
+				<ServerComponentShell>
 					<SongsView {...{ search }} />
-				</Shell>
+				</ServerComponentShell>
 			</main>
 		</StyledContainer>
 	);

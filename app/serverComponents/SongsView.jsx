@@ -25,8 +25,8 @@ const SongCard = ({ song }) => {
 };
 
 async function SongsView({ search, songData }) {
-	return search?.length > MIN_SEARCH_LENGTH ? (
-		<div className="genius-card-container">
+	return search?.length > MIN_SEARCH_LENGTH && songData?.length > 0 ? (
+		<div className="genius-card-container animate__animated animate__fadeIn ">
 			<>
 				<h3>
 					<i>{`Genius Song Results for "${search}": ${songData?.length}`}</i>

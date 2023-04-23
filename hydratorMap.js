@@ -4,5 +4,6 @@
 
 export default {
 	SongsView: 'SongsView',
-	ArtistView: 'ArtistView'
+	ArtistView: 'ArtistView',
+	ArtistCard: 'ArtistCard'
 };
