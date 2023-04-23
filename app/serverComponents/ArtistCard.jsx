@@ -5,7 +5,9 @@ const ArtistCard = ({ artist }) => {
 	return (
 		<div className="genius-card genius-card-artist animate__animated animate__fadeIn">
 			<div>
-				<span className="title">{artist?.name}</span>
+				<a href={`?search=${artist?.name}`}>
+					<span className="title">{artist?.name}</span>
+				</a>
 				<img src={artist?.headerImageUrl} className="img-hero" />
 			</div>
 			<div style={{ float: 'right' }}>

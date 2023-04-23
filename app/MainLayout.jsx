@@ -9,15 +9,19 @@ import ArtistCard from './serverComponents/ArtistCard.jsx';
 import { MIN_SEARCH_LENGTH } from '../constants.js';
 
 const MainLayout = () => {
-	const [search, setSearch] = React.useState('');
+	const [search, setSearch] = React.useState();
 	const inputRef = React.useRef(null);
-	const [isPending, startTransition] = React.useTransition();
 
 	const onLogoClick = React.useCallback(() => {
 		setSearch('');
 		if (inputRef?.current?.value) {
 			inputRef.current.value = '';
 		}
+		window.history.pushState({}, '', '/');
+	}, []);
+
+	React.useEffect(() => {
+		setSearch(decodeURIComponent(window.location.search.replace('?search=', '')));
 	}, []);
 
 	return (
@@ -31,11 +35,10 @@ const MainLayout = () => {
 				<input
 					ref={inputRef}
 					placeholder="Search for Artist"
-					onChange={(e) =>
-						startTransition(() => {
-							!isPending && setSearch(e.target.value);
-						})
-					}
+					defaultValue={search}
+					onChange={(e) => {
+						setSearch(e.target.value);
+					}}
 				></input>
 				<MagnifyingGlass />
 				<RandomIcon />
