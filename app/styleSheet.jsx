@@ -12,6 +12,10 @@ export const StyledContainer = styled.div`
 	min-height: 100vh;
 	background-color: #202124;
 
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
 	.magnifying-glass {
 		height: 1.5rem;
 		position: relative;
@@ -50,6 +54,7 @@ export const StyledContainer = styled.div`
 		position: sticky;
 		top: 0;
 		z-index: 1;
+		width: 100%;
 	}
 
 	main {
@@ -57,6 +62,8 @@ export const StyledContainer = styled.div`
 		flex-direction: row;
 		align-items: flex-start;
 		justify-content: space-evenly;
+
+		max-width: 1300px;
 	}
 
 	.genius-card-container {
