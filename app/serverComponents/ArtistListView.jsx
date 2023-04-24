@@ -19,12 +19,12 @@ const ArtistListCard = ({ artist }) => {
 	);
 };
 
-async function ArtistListView({ search, artistData, source }) {
+async function ArtistListView({ search, artistData, source, pagination }) {
 	return search?.length > MIN_SEARCH_LENGTH && artistData?.length > 0 ? (
-		<div className="genius-list-container  animate__animated animate__fadeIn ">
+		<div>
 			<>
 				<h3>
-					<i>{`${source} Artist Results: ${artistData?.length}`}</i>
+					<i>{`${source} Artist Results ${pagination?.pageStart}-${pagination?.pageEnd} of ${pagination?.totalCount}`}</i>
 				</h3>
 
 				<div className="genius-list-container-2 genius-list-container--half">

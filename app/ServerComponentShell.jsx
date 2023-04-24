@@ -5,12 +5,11 @@ import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpa
 const initialCacheJsx = new Map();
 const initialCacheRemoteState = new Map();
 
-function ServerComponentShell(props) {
-	const { onHydrate } = props;
-	const componentName = props.children.type.componentName;
-	const childProps = props.children.props;
+const ServerComponentShell = ({ children, onHydrate }) => {
+	const componentName = children.type.componentName;
+	const childProps = children.props;
 	// define hydrator as prop or fallback
-	const hydrator = childProps.hydrator || props.children.type.hydrator;
+	const hydrator = childProps.hydrator || children.type.hydrator;
 
 	const propsForServer = JSON.stringify({ hydrator, componentName, ...childProps });
 
@@ -55,6 +54,6 @@ function ServerComponentShell(props) {
 	}, [propsForServer]);
 
 	return lazyJsx;
-}
+};
 
 export default ServerComponentShell;

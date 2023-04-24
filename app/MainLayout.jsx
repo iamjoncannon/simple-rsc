@@ -1,13 +1,13 @@
 // @ts-nocheck
 import React from 'react';
 import SongsListView from './serverComponents/SongsListView.jsx';
-import ArtistListView from './serverComponents/ArtistListView.jsx';
 import ServerComponentShell from './ServerComponentShell.jsx';
 import { StyledContainer } from './styleSheet.jsx';
 import { MagnifyingGlass, RandomIcon } from './components.jsx';
 import ArtistFeatureCard from './serverComponents/ArtistFeatureCard.jsx';
 import { MIN_SEARCH_LENGTH } from '../constants.js';
 import hydratorConstants from '../server/hydratorConstants.js';
+import ArtistListViewStateContainer from './serverComponents/ArtistListViewStateContainer.jsx';
 
 const MainLayout = () => {
 	const [search, setSearch] = React.useState();
@@ -54,11 +54,7 @@ const MainLayout = () => {
 				{search?.length > MIN_SEARCH_LENGTH && (
 					<>
 						<div className="grid-section-artist">
-							<ServerComponentShell
-								onHydrate={(stateFromHydration) =>
-									console.log('ArtistFeatureCard stateFromHydration ', stateFromHydration)
-								}
-							>
+							<ServerComponentShell>
 								<ArtistFeatureCard
 									hydrator={hydratorConstants.ArtistFeatureCardOneResult}
 									{...{ search }}
@@ -66,12 +62,8 @@ const MainLayout = () => {
 							</ServerComponentShell>
 						</div>
 						<div className="grid-section-list grid-section-list--artist">
-							<ServerComponentShell>
-								<ArtistListView {...{ search, source: 'genius' }} />
-							</ServerComponentShell>
-							<ServerComponentShell>
-								<ArtistListView {...{ search, source: 'discogs' }} />
-							</ServerComponentShell>
+							<ArtistListViewStateContainer {...{ search, source: 'genius' }} />
+							<ArtistListViewStateContainer {...{ search, source: 'discogs' }} />
 						</div>
 						<div className="grid-section-list grid-section-list--song">
 							<ServerComponentShell>
