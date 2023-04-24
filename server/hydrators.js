@@ -3,7 +3,7 @@ import { MIN_SEARCH_LENGTH } from '../constants.js';
 const prisma = new PrismaClient();
 
 const getHasNextPage = (page, totalCount) => {
-	return (page + 1) * 10 > totalCount;
+	return (page + 1) * 10 > totalCount - 1;
 };
 
 const getPagination = (page, totalCount) => {
@@ -76,10 +76,21 @@ const ArtistFeatureCardForSplashPage = async () => {
 	};
 };
 
-const SongsListView = async ({ search }) => {
+const SongsListView = async ({ search, page }) => {
 	let songData = [];
+	let totalCount = 0;
 	if (search?.length > MIN_SEARCH_LENGTH) {
+		totalCount = await prisma.song.count({
+			where: {
+				searchIndex: {
+					contains: String(search)
+				}
+			}
+		});
+
 		songData = await prisma.song.findMany({
+			skip: page * 10,
+			take: 10,
 			where: {
 				searchIndex: {
 					contains: String(search)
@@ -91,8 +102,10 @@ const SongsListView = async ({ search }) => {
 	return {
 		hydratorProps: {
 			search,
-			songData
-		}
+			songData,
+			pagination: getPagination(page, totalCount)
+		},
+		stateFromHydration: { pagination: getPagination(page, totalCount) }
 	};
 };
 

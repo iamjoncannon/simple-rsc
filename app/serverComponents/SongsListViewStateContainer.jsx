@@ -1,10 +1,10 @@
 // @ts-nocheck
 import React from 'react';
 import ServerComponentShell from '../ServerComponentShell';
-import ArtistListView from './ArtistListView';
 import PaginationWrapper from './Pagination';
+import SongsListView from './SongsListView';
 
-const ArtistListViewStateContainer = ({ search, source }) => {
+const SongsListViewStateContainer = ({ search }) => {
 	const [page, nextPage] = React.useState(0);
 	const [remoteState, setRemoteState] = React.useState(null);
 
@@ -19,7 +19,7 @@ const ArtistListViewStateContainer = ({ search, source }) => {
 			}`}
 		>
 			<ServerComponentShell onHydrate={setRemoteState}>
-				<ArtistListView {...{ search, source, page }} />
+				<SongsListView {...{ search, page }} />
 			</ServerComponentShell>
 
 			{hasResults && <PaginationWrapper {...{ remoteState, nextPage }} />}
@@ -27,4 +27,4 @@ const ArtistListViewStateContainer = ({ search, source }) => {
 	);
 };
 
-export default ArtistListViewStateContainer;
+export default SongsListViewStateContainer;

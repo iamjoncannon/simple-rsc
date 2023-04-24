@@ -1,16 +1,17 @@
 // @ts-nocheck
 import React from 'react';
-import SongsListView from './serverComponents/SongsListView.jsx';
 import ServerComponentShell from './ServerComponentShell.jsx';
 import { StyledContainer } from './styleSheet.jsx';
-import { MagnifyingGlass, RandomIcon } from './components.jsx';
+import { MagnifyingGlass } from './components.jsx';
 import ArtistFeatureCard from './serverComponents/ArtistFeatureCard.jsx';
 import { MIN_SEARCH_LENGTH } from '../constants.js';
 import hydratorConstants from '../server/hydratorConstants.js';
 import ArtistListViewStateContainer from './serverComponents/ArtistListViewStateContainer.jsx';
+import SongsListViewStateContainer from './serverComponents/SongsListViewStateContainer.jsx';
 
 const MainLayout = () => {
 	const [search, setSearch] = React.useState();
+	const [typed, setTyped] = React.useState();
 	const inputRef = React.useRef(null);
 
 	const onLogoClick = React.useCallback(() => {
@@ -21,8 +22,28 @@ const MainLayout = () => {
 		window.history.pushState({}, '', '/');
 	}, []);
 
+	const onType = React.useCallback((e) => {
+		setTyped(e.target.value);
+	}, []);
+
+	const onKeyDown = (e) => {
+		if (e.keyCode === 13) {
+			setSearch(e.target.value);
+			window.history.pushState({}, '', `/?search=${e.target.value}`);
+		}
+	};
+	const searchParam = React.useMemo(() => {
+		return decodeURIComponent(window.location.search.replace('?search=', ''));
+	}, [window.location.search]);
+
+	const isTyping = React.useMemo(() => {
+		return typed !== searchParam;
+	}, [typed, searchParam]);
+
 	React.useEffect(() => {
-		setSearch(decodeURIComponent(window.location.search.replace('?search=', '')));
+		setSearch(searchParam);
+		setTyped(searchParam);
+		window?.addEventListener('keydown', onKeyDown);
 	}, []);
 
 	return (
@@ -37,12 +58,11 @@ const MainLayout = () => {
 					ref={inputRef}
 					placeholder="Search Jenius"
 					defaultValue={search}
-					onChange={(e) => {
-						setSearch(e.target.value);
-					}}
+					onChange={onType}
 				></input>
-				<MagnifyingGlass />
-				<RandomIcon />
+				<div className={isTyping ? '' : 'opacity-30'}>
+					<MagnifyingGlass />
+				</div>
 			</header>
 			<main>
 				{search?.length <= MIN_SEARCH_LENGTH && (
@@ -66,9 +86,7 @@ const MainLayout = () => {
 							<ArtistListViewStateContainer {...{ search, source: 'discogs' }} />
 						</div>
 						<div className="grid-section-list grid-section-list--song">
-							<ServerComponentShell>
-								<SongsListView {...{ search }} />
-							</ServerComponentShell>
+							<SongsListViewStateContainer {...{ search }} />
 						</div>
 					</>
 				)}

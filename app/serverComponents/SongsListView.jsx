@@ -29,12 +29,12 @@ const SongCard = ({ song }) => {
 	);
 };
 
-async function SongsListView({ search, songData }) {
+async function SongsListView({ search, songData, pagination }) {
 	return search?.length > MIN_SEARCH_LENGTH && songData?.length > 0 ? (
-		<div className="genius-list-container animate__animated animate__fadeIn ">
+		<div>
 			<>
 				<h3>
-					<i>{`Genius Song Results: ${songData?.length}`}</i>
+					<i>{`Genius Song Results ${pagination?.pageStart}-${pagination?.pageEnd} of ${pagination?.totalCount}`}</i>
 				</h3>
 
 				<div className="genius-list-container-2">
@@ -45,14 +45,7 @@ async function SongsListView({ search, songData }) {
 			</>
 		</div>
 	) : (
-		<div className="genius-list-container animate__animated animate__fadeIn ">
-			<>
-				<h3>
-					<i>{`Genius Song Results: 0`}</i>
-				</h3>
-				<div className="genius-list-container-2"></div>
-			</>
-		</div>
+		<></>
 	);
 }
 
