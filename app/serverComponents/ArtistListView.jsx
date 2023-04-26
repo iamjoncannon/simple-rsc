@@ -35,7 +35,14 @@ async function ArtistListView({ search, artistData, source, pagination }) {
 			</>
 		</div>
 	) : (
-		<></>
+		<div>
+			<>
+				<h3>
+					<i>{`${source} Artist Results: 0 `}</i>
+				</h3>
+				<div className="genius-list-container-2 genius-list-container--half"></div>
+			</>
+		</div>
 	);
 }
 

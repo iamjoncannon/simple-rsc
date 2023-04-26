@@ -5,7 +5,7 @@ import { createRouter } from '@hattip/router';
 import { createServer } from '@hattip/adapter-node';
 import RscService from './RscService.js';
 import { PrismaClient } from '@prisma/client';
-import hydrators from './hydrators.js';
+import hydrators from '../app/serverComponents/hydrators.js';
 
 export const clientRootDirectory = '../app/';
 export const distRootDirectory = '../dist/';
@@ -31,9 +31,12 @@ const serverComponents = walk(serverComponentPath).map((each) =>
 	each.replace(serverComponentPath, 'serverComponents')
 );
 
-const port = 3000;
+// const port = 3000;
+// const host = 'localhost';
+const port = 80;
+const host = '0.0.0.0';
 
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'production';
 
 const rscService = new RscService(
 	clientRootDirectory,
@@ -46,25 +49,6 @@ const rscService = new RscService(
 rscService.buildWatch();
 
 const server = createRouter();
-
-const prisma = new PrismaClient();
-
-server.get('/songs', async ({ request }) => {
-	const search = new URL(request.url).searchParams.get('search');
-
-	if (!!search && search !== '') {
-		const result = await prisma.song.findMany({
-			where: {
-				searchIndex: {
-					contains: String(search)
-				}
-			}
-		});
-		return new Response(JSON.stringify(result));
-	}
-
-	return new Response(JSON.stringify([]));
-});
 
 server.post('/rsc', async ({ request }) => {
 	const props = await request.json();
@@ -86,7 +70,7 @@ server.get('/dist/client/**/*.js', async ({ request }) => {
 	return rscService.serveClientComponent(pathname);
 });
 
-createServer(server.buildHandler()).listen(port, 'localhost', async () => {
+createServer(server.buildHandler()).listen(port, host, async () => {
 	await rscService.build();
 	console.log(`rsc service started on http://localhost:${port}`);
 });

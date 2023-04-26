@@ -103,6 +103,18 @@ export const StyledContainer = styled.div`
 		}
 	}
 
+	.genius-card-artist-loading-container {
+		width: 40rem;
+		display: flex;
+		justify-content: center;
+	}
+
+	.genius-card-artist--loading {
+		opacity: 0.1;
+		min-width: 15rem;
+		text-align: center;
+	}
+
 	.genius-card-artist--no-result {
 		min-width: 15rem;
 		text-align: center;
@@ -194,6 +206,11 @@ export const StyledContainer = styled.div`
 
 	.genius-list-container--half {
 		max-height: 38vh;
+	}
+
+	.genius-list-container--full {
+		min-height: calc(100vh - 10rem);
+		max-height: calc(100vh - 10rem);
 	}
 
 	/* song */

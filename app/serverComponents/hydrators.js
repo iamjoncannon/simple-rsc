@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { MIN_SEARCH_LENGTH } from '../constants.js';
+import { MIN_SEARCH_LENGTH } from '../../constants.js';
 const prisma = new PrismaClient();
 
 const getHasNextPage = (page, totalCount) => {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { Suspense } from 'react';
 import ServerComponentShell from './ServerComponentShell.jsx';
 import { StyledContainer } from './styleSheet.jsx';
 import { MagnifyingGlass } from './components.jsx';
@@ -8,9 +8,10 @@ import { MIN_SEARCH_LENGTH } from '../constants.js';
 import hydratorConstants from '../server/hydratorConstants.js';
 import ArtistListViewStateContainer from './serverComponents/ArtistListViewStateContainer.jsx';
 import SongsListViewStateContainer from './serverComponents/SongsListViewStateContainer.jsx';
+import ArtistFeatureCardLoading from './serverComponents/states/ArtistFeatureCardLoading.jsx';
 
 const MainLayout = () => {
-	const [search, setSearch] = React.useState();
+	const [search, setSearch] = React.useState('');
 	const [typed, setTyped] = React.useState();
 	const inputRef = React.useRef(null);
 
@@ -34,15 +35,17 @@ const MainLayout = () => {
 	};
 	const searchParam = React.useMemo(() => {
 		return decodeURIComponent(window.location.search.replace('?search=', ''));
-	}, [window.location.search]);
+	}, []);
 
 	const isTyping = React.useMemo(() => {
 		return typed !== searchParam;
 	}, [typed, searchParam]);
 
 	React.useEffect(() => {
-		setSearch(searchParam);
-		setTyped(searchParam);
+		if (searchParam !== '') {
+			setSearch(searchParam);
+			setTyped(searchParam);
+		}
 		window?.addEventListener('keydown', onKeyDown);
 	}, []);
 
@@ -66,7 +69,7 @@ const MainLayout = () => {
 			</header>
 			<main>
 				{search?.length <= MIN_SEARCH_LENGTH && (
-					<ServerComponentShell>
+					<ServerComponentShell fallback={<ArtistFeatureCardLoading />}>
 						<ArtistFeatureCard hydrator={hydratorConstants.ArtistFeatureCardForSplashPage} />
 					</ServerComponentShell>
 				)}
@@ -74,7 +77,7 @@ const MainLayout = () => {
 				{search?.length > MIN_SEARCH_LENGTH && (
 					<>
 						<div className="grid-section-artist">
-							<ServerComponentShell>
+							<ServerComponentShell fallback={<ArtistFeatureCardLoading />}>
 								<ArtistFeatureCard
 									hydrator={hydratorConstants.ArtistFeatureCardOneResult}
 									{...{ search }}

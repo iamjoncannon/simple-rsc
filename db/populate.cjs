@@ -8,6 +8,9 @@ const fs = require('node:fs');
 
 const prisma = new PrismaClient();
 
+function timeout(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
 const insertGeniusArtists = async () => {
 	let i = 1000;
 
@@ -20,29 +23,39 @@ const insertGeniusArtists = async () => {
 
 		// insert from file
 
-		await fs.readFile(filePath, (err, data) => {
+		await fs.readFile(filePath, async (err, data) => {
 			const artists = JSON.parse(String(data));
 
-			artists.forEach(async (each) => {
+			await artists.forEach(async (each) => {
 				if (each.response) {
 					const r = each.response;
 
 					const artist = r.artist;
-					const newArtist = await prisma.artist.create({
-						// @ts-ignore
-						data: {
-							name: artist.name,
-							source: 'genius',
-							sourceId: artist.id,
-							imageUrl: artist.image_url,
-							headerImageUrl: artist.header_image_url,
-							url: artist.url,
-							description: artist.description.html
-						}
-					});
+					try {
+						const newArtist = await prisma.artist.create({
+							// @ts-ignore
+							data: {
+								name: artist.name,
+								source: 'genius',
+								sourceId: artist.id,
+								imageUrl: artist.image_url,
+								headerImageUrl: artist.header_image_url,
+								url: artist.url,
+								description: artist.description.html
+							}
+						});
+					} catch (err) {
+						console.log(err);
+					}
 				}
+
+				await timeout(1000);
 			});
+
+			await timeout(1000);
 		});
+
+		await timeout(5000);
 
 		i += 1000;
 	}
@@ -84,6 +97,7 @@ const insertGeniusSong = async (each) => {
 		} catch (err) {
 			console.log(err);
 		}
+		await timeout(1000);
 	}
 };
 
@@ -98,13 +112,15 @@ const insertGeniusSongs = async () => {
 
 		// insert from file
 
-		await fs.readFile(filePath, (err, data) => {
+		await fs.readFile(filePath, async (err, data) => {
 			const songs = JSON.parse(String(data));
 
-			songs?.forEach(async (each) => {
+			await songs?.forEach(async (each) => {
 				await insertGeniusSong(each);
 			});
+			await timeout(50);
 		});
+		await timeout(500);
 
 		i += 50;
 	}
@@ -114,6 +130,7 @@ const insertGeniusSongs1 = async () => {
 	// @ts-ignore
 	[...songs1, ...songs2, ...songs3, ...songs4, ...songs5].forEach(async (each) => {
 		await insertGeniusSong(each);
+		await timeout(5000);
 	});
 };
 
@@ -128,26 +145,31 @@ const insertDiscogsArtists = async () => {
 
 		// insert from file
 
-		await fs.readFile(filePath, (err, data) => {
+		await fs.readFile(filePath, async (err, data) => {
 			const artists = JSON.parse(String(data));
 
-			artists.forEach(async (artist) => {
+			await artists.forEach(async (artist) => {
 				if (!!artist) {
-					const newArtist = await prisma.artist.create({
-						// @ts-ignore
-						data: {
-							name: artist.name,
-							source: 'discogs',
-							sourceId: artist.id,
-							imageUrl: artist.images?.[0]?.uri || '',
-							headerImageUrl: artist.images?.[0]?.uri || '',
-							url: artist.uri,
-							description: artist.profile
-						}
-					});
+					try {
+						const newArtist = await prisma.artist.create({
+							// @ts-ignore
+							data: {
+								name: artist.name,
+								source: 'discogs',
+								sourceId: artist.id,
+								imageUrl: artist.images?.[0]?.uri || '',
+								headerImageUrl: artist.images?.[0]?.uri || '',
+								url: artist.uri,
+								description: artist.profile
+							}
+						});
+					} catch (err) {
+						console.log(err);
+					}
 				}
 			});
 		});
+		await timeout(1000);
 
 		i += 50;
 	}
@@ -155,14 +177,14 @@ const insertDiscogsArtists = async () => {
 
 async function main() {
 	console.log('--insertGeniusArtists--');
-	await insertGeniusArtists();
+	// await insertGeniusArtists();
 
 	console.log('--insertGeniusSongs--');
 
-	await insertGeniusSongs();
+	// await insertGeniusSongs();
 	console.log('--insertGeniusSongs1--');
 
-	await insertGeniusSongs1();
+	// await insertGeniusSongs1();
 	console.log('--insertDiscogsArtists--');
 
 	await insertDiscogsArtists();

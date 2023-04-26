@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { /* FOR FRAMEWORK DEVS */ createFromFetch } from 'react-server-dom-webpack/client';
 import MainLayout from './MainLayout.jsx';
 
-import './utils/dev/live-reload.js';
+// import './utils/dev/live-reload.js';
 
 window.__webpack_require__ = async (id) => {
 	return import(id);

@@ -45,7 +45,14 @@ async function SongsListView({ search, songData, pagination }) {
 			</>
 		</div>
 	) : (
-		<></>
+		<div>
+			<>
+				<h3>
+					<i>{`Genius Song Results: 0`}</i>
+				</h3>
+				<div className="genius-list-container--full"></div>
+			</>
+		</div>
 	);
 }
 

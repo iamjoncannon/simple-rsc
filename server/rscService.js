@@ -7,8 +7,7 @@ import { relative } from 'node:path';
 import chokidar from 'chokidar';
 import { createElement } from 'react';
 import * as ReactServerDom from 'react-server-dom-webpack/server.browser';
-import hydratorMap from './hydratorConstants.js';
-import hydrators from './hydrators.js';
+import hydrators from '../app/serverComponents/hydrators.js';
 
 const USE_CLIENT_ANNOTATIONS = ['"use client"', "'use client'"];
 const JSX_EXTS = ['.jsx', '.tsx'];
